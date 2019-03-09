@@ -1,7 +1,8 @@
 <?php
 
 require_once('get_host_info.inc');
-
+error_reporting(E_ALL);
+ini_set('display_errors','On');
 class rabbitMQServer
 {
 	private $machine = "";
@@ -83,7 +84,9 @@ class rabbitMQServer
 		catch(Exception $e)
 		{
 			// ampq throws exception if get fails...
-            echo "error: rabbitMQServer: process_message: exception caught: ".$e;
+			$message = "error: rabbitMQServer : process_message: exception caught: ";
+			echo $message.$e;
+			error_log($message);
 		}
 		// message does not require a response, send ack immediately
 		$body = $msg->getBody();
@@ -129,7 +132,11 @@ class rabbitMQServer
 		}
 		catch (Exception $e)
 		{
-			trigger_error("Failed to start request processor: ".$e,E_USER_ERROR); 
+		
+			$message = "Failed to start request processor";
+			error_log($message);
+			trigger_error($message.$e,E_USER_ERROR);
+		       	
 		}
 	}
 }
@@ -173,7 +180,8 @@ class rabbitMQClient
 		$uid = $response->getCorrelationId();
 		if (!isset($this->response_queue[$uid]))
 		{
-		  echo  "unknown uid\n";
+		  $message = "unknown uid\n";	
+		  echo  $message;
 		  return true;
 		}
     $this->conn_queue->ack($response->getDeliveryTag());
@@ -229,7 +237,9 @@ class rabbitMQClient
 		}
 		catch(Exception $e)
 		{
-			die("failed to send message to exchange: ". $e->getMessage()."\n");
+			$message = "Failed to send message to exchange, please check your info: " . $params['host'] . "\n" . $params['port'] . "\n" . $params['login'] . "\n" . $params['password'] . "\n". $params['vhost'];
+			error_log($messsage);
+			die($message. $e->getMessage()."\n");
 		}
 	}
 
@@ -263,8 +273,10 @@ class rabbitMQClient
 			return $exchange->publish($json_message,$this->routing_key);
 		}
 		catch(Exception $e)
-		{
-			die("failed to send message to exchange: ". $e->getMessage()."\n");
+		{$message = "Failed to send message to exchange, please check your info: " . $params['host'] . "\n" . $params['port'] . "\n" . $params['login'] . "\n" . $params['password'] . "\n". $params['vhost'];
+                        error_log($messsage);
+                        die($message. $e->getMessage()."\n");
+			//die("failed to send message to exchange: ". $e->getMessage()."\n");
 		}
 	}
 }

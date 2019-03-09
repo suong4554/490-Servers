@@ -7,14 +7,19 @@ require_once('rabbitMQLib.inc');
 include('account.php');
 include('Function.php');
 
+error_reporting(E_ALL);
+ini_set('display_errors',on);
+
 $db = mysqli_connect($servername, $username, $password , $project);
 if (mysqli_connect_errno())
   {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	  $message = "Failed to connect to MySQL: " . mysqli_connect_error();
+	  echo $message;
+	  error_log($message);
 	  exit();
   }
 
-mysqli_select_db( $db, $project ); 
+mysqli_select_db( $db, $project );
 
 
 function doLogin($username,$password)
@@ -30,7 +35,8 @@ function doLogin($username,$password)
 	#return $response;
 	print($result);
 	#return array("returnCode" => '0', 'message'=> $result, 'result' => $result);
-        return $result;
+	return $result;
+	
 	
     //return false if not valid
 }
@@ -41,19 +47,11 @@ function requestProcessor($request)
   var_dump($request);
   if(!isset($request['type']))
   {
-    return "ERROR: unsupported message type";
+	  $message = "Error: unsupported message type";
+	  error_log($message);
+	  return $message;
+	 
   }
-  /*switch ($request['type'])
-  {
-    case "Login":{
-	    $result = doLogin($request['user'],$request['password']);
-	    print($result);
-	    return $result;
-    }
-    case "validate_session":
-	    return doValidate($request['sessionId']);
-	    
-  }*/
   $result = "";
   $temp = $request['type'];
   if($request['type'] == 'Login')
