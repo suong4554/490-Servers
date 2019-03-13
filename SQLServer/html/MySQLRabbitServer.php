@@ -49,6 +49,12 @@ function requestProcessor($request){
 	  $result = recordGame($request['user1'],$request['user2'],$request['winner'],$request['score1'],$request['score2'],$request['turns']);
 	  print($result);
   }
+   else if ($temp == 'showData'){
+	  $result = [];
+	  $result = show($request['user'], $result);
+	  print($result);
+  } 
+  
   
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);
   

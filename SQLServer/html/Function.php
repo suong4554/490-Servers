@@ -52,39 +52,15 @@ function recordGame ($user1, $user2, $winner, $score1, $score2, $turns) {
 function show($user, &$out){
 	global $db;
 	
-	$s="select*from A where user = '$user' ";  
-	$out .= "<br>SQL statement is: $s<br>";
+	$s="SELECT*FROM playerHistory WHERE playerOneUser = '$user' or playerTwoUser = '$user'";  
+	#$out .= "<br>SQL statement is: $s<br>";
 	$t = mysqli_query($db, $s) or die (mysqli_error($db));
+
 	while (   $r = mysqli_fetch_array($t, MYSQLI_ASSOC) ){	
-	  $user = $r["user"];
-	  $balance  = $r["cur_balance"];
-     $out .= "<br> user is: $user <br>  current_balance is: $$balance <br><br>";
+	  array_push($out, $r);
      }
 	 
-	$s="select*from T where user = '$user' order by date desc";  
-	$t = mysqli_query($db, $s) or die (mysqli_error($db));
-	while (   $r = mysqli_fetch_array($t, MYSQLI_ASSOC) ){	
-	  $date = $r["date"];
-	  $amount  = $r["amount"];
-    $type = $r["type"];
-	if ($type == "W"){
-		$type = "Withdraw";
-	}
-	if ($type == "D"){
-		$type = "Deposit";
-	}
-     $out .= 	
-	 '<div class="col-md-8 col-sm-12 panel panel-default">' .
-		'<div class="panel-body" style="padding: 8px">' .
-			 '<h3>' . $type . '</h3>' .
-				'<div class="form-group" >'.
-					'<h4>' . $date . '</h4>'.
-					'<h5>' . '$'.$amount . '</h5>'.
-				 '</div>'.
-		'</div>'.
-	'</div>';
-  }
-  echo $out;
+	return $out;
 }
 
 function mailer ($user, $out){
