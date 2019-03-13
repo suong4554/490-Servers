@@ -22,27 +22,8 @@ if (mysqli_connect_errno())
 mysqli_select_db( $db, $project );
 
 
-function doLogin($username,$password)
-{
-#	$client = new rabbitMQClient("testRabbitMQ.ini", "testServer");
-	auth($username, $password, $result);
-	#$request = array();
-	#$request['type'] = "LoginVerification";
-	#$request['success'] = $result;
-	#This is only needed if it does not return a true or false
-	#$response = $client->send_request($request);
-	#$response = true;
-	#return $response;
-	print($result);
-	#return array("returnCode" => '0', 'message'=> $result, 'result' => $result);
-	return $result;
-	
-	
-    //return false if not valid
-}
 
-function requestProcessor($request)
-{
+function requestProcessor($request){
   echo "received request".PHP_EOL;
   var_dump($request);
   if(!isset($request['type']))
@@ -54,15 +35,18 @@ function requestProcessor($request)
   }
   $result = "";
   $temp = $request['type'];
-  if($request['type'] == 'Login')
-  {
-   $result = doLogin($request['user'],$request['password']);
+  if($temp == 'Login'){
+   $result = auth($request['user'],$request['password'], $result);
     print($result);
   }
 
-  else if ($temp == 'Registration')
-  {
+  else if ($temp == 'Registration'){
 	  $result = register($request['user'],$request['password'],$request['password2'],$request['email']);
+	  print($result);
+  }
+  
+   else if ($temp == 'recordGame'){
+	  $result = recordGame($request['user1'],$request['user2'],$request['winner'],$request['score1'],$request['score2'],$request['turns']);
 	  print($result);
   }
   
