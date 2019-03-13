@@ -31,11 +31,11 @@ $_SESSION["password"] = $pass;
 $user = $_SESSION["user"];
 $pass = $_SESSION["password"];
 
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('rabbit/path.inc');
+require_once('rabbit/get_host_info.inc');
+require_once('rabbit/MQLib.inc');
 
-$client = new rabbitMQClient('testRabbitMQ.ini', 'testServer');
+$client = new rabbitMQClient('/rabbit/MYSQLRabbit.ini', 'MySQLRabbit';
 
 $msg = "Do your own work sometimes";
 

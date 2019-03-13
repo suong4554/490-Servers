@@ -137,6 +137,8 @@ if(!$_SESSION["login"]){
 <body onload="init()">
 <button type="button" id="clearCookies" onClick="logOut()">log out/Quit Game</button>
 <br>
+<button type="button" id="endGameRedirect" onClick="endGame()">End Game/Declare Winner</button>
+<br>
 <div id="ScrabbleContainer">
 
 
@@ -695,6 +697,48 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		alert("Please use characters that were alloted at beginning of turn")
 	}
 
+}
+
+
+function endGame(){
+	console.log("Game ending")
+	
+	//need to change later so that way when two users connect can get proper results
+	var score2 = 0
+	var user2 = "Joel"
+	var winner = "user"
+	if(score > score2){
+		winner = user
+	}
+	else{
+		winner = user2
+	}
+	
+	filename1 = "gameState/" + user + "gameState.txt"
+	
+	filename2 = "gameState/" + user2 + "gameState.txt"
+	
+	
+	$.ajax({
+		type:'POST',
+		async: false,
+		url: "savetoSQL.php",
+		data: {user1: user, user2: user2, winner: winner, score1: score, score2: score2, turns: turn, filename1: filename1, filename2: filename2},
+		dataType: "json"
+		
+	})
+	.done(function(msg){
+		console.log("succefully wrote to SQL");
+		//console.log(msg);
+	})
+	.fail(function(msg){
+		console.log("failed to write to SQL");
+		console.log(msg);
+	});
+
+	alert("Winner is " + winner, you will be redirected to the home page shortly)
+	location.replace("localhost/home.php")
+	
 }
 	
 

@@ -19,13 +19,13 @@ $email = $_GET["email"];
 ########### Rabbit MQ #################
 ########################################
 
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('rabbit/path.inc');
+require_once('rabbit/get_host_info.inc');
+require_once('rabbit/rabbitMQLib.inc');
 
-$client = new rabbitMQClient('testRabbitMQ.ini', 'testServer');
+$client = new rabbitMQClient('rabbit/MYSQLRabbit.ini', 'MySQLRabbit');
 
-$msg = "Do your own work sometimes";
+$msg = "Sending login request";
 
 $request = array();
 $request['type'] = "Registration";
