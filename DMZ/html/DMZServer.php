@@ -25,7 +25,7 @@ function requestProcessor($request)
 	$result = wordcheck($request["words"]);
   }
   
-  return array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result['result']);
+  return array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result);
 
 }
 
