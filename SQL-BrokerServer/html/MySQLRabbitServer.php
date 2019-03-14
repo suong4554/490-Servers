@@ -23,6 +23,15 @@ mysqli_select_db( $db, $project );
 
 
 
+function wordCheck($request){
+	//sends a message to the DMZ server
+	$client = new rabbitMQClient("DMZ.ini", "DMZ");
+	$response = $client->send_request($request);
+    return $response;
+	
+}
+
+
 function requestProcessor($request){
   echo "received request".PHP_EOL;
   var_dump($request);
@@ -53,7 +62,11 @@ function requestProcessor($request){
 	  $result = [];
 	  $result = show($request['user'], $result);
 	  print($result);
-  } 
+  }
+  else if($temp == "showMatchHistory"){
+	$result = wordCheck($request);
+	print($result;)
+  }
   
   
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);

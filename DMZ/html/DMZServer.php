@@ -21,7 +21,7 @@ function requestProcessor($request)
 	  #return $result;
 	# echo "hello"; 
    }
-  elseif($temp == "showMatchHistory"){
+  else if($temp == "showMatchHistory"){
 	$result = wordcheck($request["words"]);
   }
   
@@ -29,7 +29,7 @@ function requestProcessor($request)
 
 }
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+$server = new rabbitMQServer("DMZ.ini","DMZ");
 
 
 echo "testRabbitMQServer BEGIN".PHP_EOL;
