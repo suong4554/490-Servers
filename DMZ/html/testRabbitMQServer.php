@@ -4,13 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-function doLogin($username,$password)
-{
-    // lookup username in databas
-    // check password
-    return true;
-    //return false if not valid
-}
+include("wordCheck/wordcheck.php");
 
 function requestProcessor($request)
 {
@@ -20,17 +14,23 @@ function requestProcessor($request)
   {
     return "ERROR: unsupported message type";
   }
-  switch ($request['type'])
-  {
-    case "login":
-      return doLogin($request['username'],$request['password']);
-    case "validate_session":
-      return doValidate($request['sessionId']);
+
+  $temp = $request['type'];
+  if($temp == 'Login'){
+	$result = doLogin($request['username'],$request['password']);
+	  #return $result;
+	# echo "hello"; 
+   }
+  elseif($temp == "showMatchHistory"){
+	$result = wordcheck($request["words"]);
   }
-  return array("returnCode" => '0', 'message'=>"Server received request and processed");
+  
+  return array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result['result']);
+
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+
 
 echo "testRabbitMQServer BEGIN".PHP_EOL;
 $server->process_requests('requestProcessor');
