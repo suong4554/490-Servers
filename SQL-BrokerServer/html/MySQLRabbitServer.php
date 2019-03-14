@@ -27,6 +27,7 @@ function wordCheck($request){
 	//sends a message to the DMZ server
 	$client = new rabbitMQClient("DMZ.ini", "DMZ");
 	$response = $client->send_request($request);
+	$response = $response["result"];
     return $response;
 	
 }
