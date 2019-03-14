@@ -32,8 +32,8 @@ function wordcheck($array){
 	return $endvalue;
 }
 
-$temp = wordcheck($array);
+#$temp = wordcheck($array);
 
-print($temp);
+#print($temp);
 ?>
 
