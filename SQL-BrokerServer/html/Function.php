@@ -1,8 +1,8 @@
 <?php
 function auth ($user, $pass, &$t) { 
   global $db;
-  #$pass = sha1($pass);
-  $s = "select * from testTable where Username = '$user' and Password = '$pass'" ;
+  $pass = sha1($pass);
+  $s = "select * from userTable where Username = '$user' and Password = '$pass'" ;
   //echo "<br> $s <br> <br>";
   $t = mysqli_query ($db, $s );
   $num =  mysqli_num_rows($t); 
@@ -118,8 +118,8 @@ function register ($user, $pass, $pass2, $email){
 	#}
 	
 	//Insert user into database
-	//$passhash = sha1($pass);
-	$insert = "insert into testTable (Username, Password, Email) values ('$user','$pass', '$email')";
+	$passhash = sha1($pass);
+	$insert = "insert into userTable (Username, Password, Email) values ('$user','$passhash', '$email')";
 	echo "<br> $insert <br> <br>";
 	$t = mysqli_query ( $db , $insert );
 
