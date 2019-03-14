@@ -46,7 +46,7 @@ if(!$_SESSION["login"]){
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+<!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
 </head>
 
@@ -444,7 +444,29 @@ function showPieces(playerPieces){
 //will need to edit this later in order to make it actually call the words api
 function callWordsAPI(words){
 	console.log("callWordsAPI Function")
-	return true
+	var temp = ""
+	words = JSON.stringify(words)
+	console.log(words)
+	$.ajax({
+		type:'POST',
+		async: false,
+		url: "callWordCheck.php",
+		data: {wordsArr: words},
+		dataType: "text",
+		success: function(data){
+			temp = data;
+			console.log("successfully checked words");
+		},
+		error: function(data){
+			console.log(data);
+			console.log("failed to check words");
+		}	});
+	//console.log("word check " + temp)
+
+	temp = JSON.parse(temp)
+	//boolValue = (/true/i).test(temp)
+	//console.log("word check " + boolValue)
+	return temp
 	
 }
 
@@ -524,9 +546,6 @@ function checkPieces(playerPieces, origboard, board, firstTurnIdent){
 }
 
 
-
-
-
 function turnEndPHP(playerPieces, pieces, score, userName, turn, fileN){
 	console.log("turnEndPHP Function")
 	var dict = {};
@@ -599,7 +618,7 @@ function logOut(){
 		console.log(msg);
 	});
 	
-	location.reload();
+	location.replace("../index.php")
 	
 }
 	
@@ -637,8 +656,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	var charactersUsed = checkPieces(playerPieces, origboard, board, firstTurnIdent)
 	
 	console.log(charactersUsed)
-	
+	console.log(changedWords)
 	var wordExists = callWordsAPI(changedWords)
+	console.log("word exists" + wordExists)
 	
 	if(wordExists && charactersUsed && firstTurnIdent){
 	
@@ -686,7 +706,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		
 
 		writeBoardFile(board, turn, pieces, "python/old.json")
-		location.reload();
+		//location.reload();
 		
 
 	}
@@ -695,6 +715,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	}
 	else if(!charactersUsed){
 		alert("Please use characters that were alloted at beginning of turn")
+	}
+	else if(!wordExists){
+		alert("Word does not exist")
 	}
 
 }
@@ -736,8 +759,8 @@ function endGame(){
 		console.log(msg);
 	});
 
-	alert("Winner is " + winner, you will be redirected to the home page shortly)
-	location.replace("localhost/home.php")
+	alert("Winner is " + winner + ", you will be redirected to the home page shortly")
+	location.replace("../home.php")
 	
 }
 	
