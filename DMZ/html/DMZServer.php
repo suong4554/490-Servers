@@ -21,7 +21,7 @@ function requestProcessor($request)
 	  #return $result;
 	# echo "hello"; 
    }
-  else if($temp == "showMatchHistory"){
+  else if($temp == "checkWords"){
 	$result = wordcheck($request["words"]);
   }
   
