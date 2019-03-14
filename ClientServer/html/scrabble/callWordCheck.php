@@ -36,8 +36,8 @@ $response = $client->send_request($request);
 //$_SESSION["login"] = $response["result"];
 #echo $response["message"];
 
-print_r($response);
-print("<br>");
+print($response["result"]);
+//print("<br>");
 //echo $_SESSION["login"];
 
 ?>
