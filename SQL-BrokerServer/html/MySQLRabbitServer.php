@@ -63,7 +63,7 @@ function requestProcessor($request){
 	  $result = show($request['user'], $result);
 	  print($result);
   }
-  else if($temp == "showMatchHistory"){
+  else if($temp == "checkWords"){
 	$result = wordCheck($request);
 	print($result;)
   }
