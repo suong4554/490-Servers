@@ -3,8 +3,14 @@
 
 session_start();
 
+include ("Function.php");
+
 print($_SESSION["login"]);
 
+if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
+	redirect("", "index.php", 0);
+	exit();
+}
 
 
 
@@ -38,6 +44,7 @@ print($_SESSION["login"]);
 
 <div class="card">
 	<div class="card-body" id="HomeMenu">
+	
 		<h2>Home Menu</h2>
 		<br>
 		<div class="card bg-light text-dark">
@@ -49,6 +56,11 @@ print($_SESSION["login"]);
 		<div class="card bg-light text-dark">
 			<button onClick="location.href = 'showGameHistory.php'" id='showHistory'>
 				<div class="card-body">View Match History</div>
+			</button>
+		</div>
+		<div class="card bg-light text-dark">
+			<button onClick="location.href = 'logout.php'" id='logout'>
+				<div class="card-body">Logout</div>
 			</button>
 		</div>
 		<br>

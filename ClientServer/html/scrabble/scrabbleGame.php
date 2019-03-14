@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);	
 #date_default_timezone_set("America/New_York");
-session_set_cookie_params(0, "/var/www/html", "localhost");
+//session_set_cookie_params(0, "/var/www/html", "localhost");
 session_start();
 /*
 $_SESSION = array();
@@ -12,8 +12,11 @@ session_set_cookie_params(0, "/var/www/html", "localhost");
 session_start();
 */
 
-$_SESSION["login"] = True;
-$_SESSION["user"]= "Bill";
+//$_SESSION["login"] = True;
+
+
+
+//$_SESSION["user"]= "Bill";
 //$_SESSION["turn"] = 0;
 
 

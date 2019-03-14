@@ -30,7 +30,9 @@ $msg = "Sending login request";
 
 $request = array();
 $request['type'] = "Registration";
-$request['user'] = $user;
+$request['username'] = $user;
+#$request['password'] = sha1($pass);
+#$request['password2'] = sha1($pass2);
 $request['password'] = $pass;
 $request['password2'] = $pass2;
 $request['email'] = $email;
@@ -48,16 +50,17 @@ $_SESSION["registration"] = $response["result"];
 
 #echo $response["message"];
 
-print_r($response);
-print("<br>");
-echo $_SESSION["registration"];
+//print_r($response);
+//print("<br>");
+//echo $_SESSION["registration"];
 
 if($_SESSION["registration"] == True){
- redirect("Invalid email, password or username", "registration.html", 3);
+ redirect("Invalid email, password or username <br> you will be shortly redirected", "registration.html", 5);
  exit();
 }
 elseif($_SESSION["registration"] == False){
 	$_SESSION["login"] = True;
+	$_SESSION["user"] = $user;
 	redirect("", "index.php", 0);
 	exit();
 }
