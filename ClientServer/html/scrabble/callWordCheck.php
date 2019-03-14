@@ -8,7 +8,7 @@ session_start();
 
 include("Function.php");
 
-$array = $_POST['wordsArr'];
+$words = $_POST['wordsArr'];
 ##############################################
 ####### RABBITMQ CODE ########################
 ##############################################
