@@ -25,11 +25,11 @@ if(file_exists($filename)){
 ########### Rabbit MQ #################
 ########################################
 
-require_once('../rabbit/path.inc');
-require_once('../rabbit/get_host_info.inc');
-require_once('../rabbit/rabbitMQLib.inc');
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
 
-$client = new rabbitMQClient('../rabbit/MYSQLRabbit.ini', 'MySQLRabbit');
+$client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
 
 $msg = "Sending login request";
 
@@ -49,7 +49,7 @@ if($response){
 	print("{}");
 }
 else{
-	print("Failed to update sql")
+	print("Failed to update sql");
 }
 
 

@@ -61,7 +61,7 @@ if($_SESSION["login"]){
 	print("hello");
 }
 else{
-	redirect("", "index.php",0);
+	redirect("Wrong username or password, you will be redirected shortly", "index.php",3);
 	exit();
 }
 

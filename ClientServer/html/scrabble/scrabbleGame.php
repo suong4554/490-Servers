@@ -446,6 +446,7 @@ function showPieces(playerPieces){
 
 //will need to edit this later in order to make it actually call the words api
 function callWordsAPI(words){
+	
 	console.log("callWordsAPI Function")
 	var temp = ""
 	words = JSON.stringify(words)
@@ -466,11 +467,12 @@ function callWordsAPI(words){
 		}	});
 	//console.log("word check " + temp)
 
-	temp = JSON.parse(temp)
-	//boolValue = (/true/i).test(temp)
+	//temp = JSON.parse(temp)
+	temp = (/true/i).test(temp)
 	//console.log("word check " + boolValue)
 	return temp
 	
+	//return true
 }
 
 
@@ -709,7 +711,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		
 
 		writeBoardFile(board, turn, pieces, "python/old.json")
-		//location.reload();
+		location.reload();
 		
 
 	}
