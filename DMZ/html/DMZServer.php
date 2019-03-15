@@ -23,6 +23,7 @@ function requestProcessor($request)
    }
   else if($temp == "checkWords"){
 	$result = wordcheck($request["words"]);
+	print $result;
   }
   
   return array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result);
