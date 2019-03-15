@@ -1,20 +1,26 @@
 <?php
-function auth ($user, $pass, &$t) { 
+function auth ($user, $pass) 
+{ 
   global $db;
-  $pass = sha1($pass);
+  //$pass = sha1($pass);
   $s = "select * from userTable where Username = '$user' and Password = '$pass'" ;
   //echo "<br> $s <br> <br>";
   $t = mysqli_query ($db, $s );
-  $num =  mysqli_num_rows($t); 
-  if ( $num > 0 ) {
-	  $t = true  ;} 
-	else {   
-	$t = false  ;}
-;}
+  $num = mysqli_num_rows($t);
+  if($num>0)
+  {
+	 $t = true;
+  }
+  else
+  {
+	 $t = false;
+  }
+  return $t;
+}
 
 function isActive($user, &$active){
 	global $db;
-	 $s = "select * from testTable where Username = '$user'";
+	 $s = "select * from userTable where Username = '$user'";
 	 $t = mysqli_query ($db, $s);
 	 $r = mysqli_fetch_array($t, MYSQLI_ASSOC);
 	 $active = $r["Active"];
@@ -42,7 +48,7 @@ function recordGame ($user1, $user2, $winner, $score1, $score2, $turns) {
 	$s = "insert into playerHistory (playerOneUser, playerTwoUser, winner, playerOneScore, playerTwoScore, turnsUsed, gameDate) values ('$user1', '$user2' , '$winner' , $score1, $score2, $turns, NOW())";
 	$t = mysqli_query($db, $s) or die (mysqli_error($db)); 
 	//I'm assuming it returns true
-	return $t
+	return $t;
 	}
 
 	
@@ -103,7 +109,7 @@ function register ($user, $pass, $pass2, $email){
 	}
 	
 	//Check if Username is in database
-	$s = "select * from testTable where username = '$user'" ;
+	$s = "select * from userTable where Username = '$user'" ;
 	$t = mysqli_query ( $db , $s );
  	$num =  mysqli_num_rows($t); 
 	if ( $num > 0 ) {
@@ -118,9 +124,10 @@ function register ($user, $pass, $pass2, $email){
 	#}
 	
 	//Insert user into database
-	$passhash = sha1($pass);
+	//$passhash = sha1($pass);
+	$passhash = $pass;
 	$insert = "insert into userTable (Username, Password, Email) values ('$user','$passhash', '$email')";
-	echo "<br> $insert <br> <br>";
+	//echo "<br> $insert <br> <br>";
 	$t = mysqli_query ( $db , $insert );
 
 	return $invalid;	

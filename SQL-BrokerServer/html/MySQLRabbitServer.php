@@ -45,13 +45,13 @@ function requestProcessor($request){
   }
   $result = "";
   $temp = $request['type'];
-  if($temp == 'Login'){
-   $result = auth($request['user'],$request['password'], $result);
-    print($result);
+  if($temp == 'Login')
+  {
+	  $result = auth($request['username'],$request['password']);
   }
 
   else if ($temp == 'Registration'){
-	  $result = register($request['user'],$request['password'],$request['password2'],$request['email']);
+	  $result = register($request['username'],$request['password'],$request['password2'],$request['email']);
 	  print($result);
   }
   
@@ -66,7 +66,7 @@ function requestProcessor($request){
   }
   else if($temp == "checkWords"){
 	$result = wordCheck($request);
-	print($result;)
+	print($result);
   }
   
   
