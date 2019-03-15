@@ -50,6 +50,7 @@ function requestProcessor($request)
   elseif($temp == "Registration"){
 	$result = doRegistration($request['user'], $request['password'], $request['password2'], $request['email']);
   }
+
   
   #print($result["message"]);
   return array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result['result']);

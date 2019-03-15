@@ -19,17 +19,20 @@ $email = $_GET["email"];
 ########### Rabbit MQ #################
 ########################################
 
-require_once('rabbit/path.inc');
-require_once('rabbit/get_host_info.inc');
-require_once('rabbit/rabbitMQLib.inc');
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
-$client = new rabbitMQClient('rabbit/MYSQLRabbit.ini', 'MySQLRabbit');
+$client = new rabbitMQClient('MySQLRabbit.ini', 'MySQLRabbit');
+#$client = new rabbitMQClient('testRabbitMQ.ini', 'testServer');
 
 $msg = "Sending login request";
 
 $request = array();
 $request['type'] = "Registration";
-$request['user'] = $user;
+$request['username'] = $user;
+#$request['password'] = sha1($pass);
+#$request['password2'] = sha1($pass2);
 $request['password'] = $pass;
 $request['password2'] = $pass2;
 $request['email'] = $email;
@@ -47,16 +50,17 @@ $_SESSION["registration"] = $response["result"];
 
 #echo $response["message"];
 
-print_r($response);
-print("<br>");
-echo $_SESSION["registration"];
+//print_r($response);
+//print("<br>");
+//echo $_SESSION["registration"];
 
 if($_SESSION["registration"] == True){
- redirect("Invalid email, password or username", "registration.html", 3);
+ redirect("Invalid email, password or username <br> you will be shortly redirected", "registration.html", 5);
  exit();
 }
 elseif($_SESSION["registration"] == False){
 	$_SESSION["login"] = True;
+	$_SESSION["user"] = $user;
 	redirect("", "index.php", 0);
 	exit();
 }
