@@ -1,4 +1,4 @@
-
+import sys
 import json
 from pprint import pprint
 import random
@@ -204,7 +204,16 @@ dictS["turn"] = 0
 print(json.dumps(dictS))
 
 
-with open(dir_path + "old.json", "w") as myfile:
+#gets Game Session
+temp = str(sys.argv)
+#print(temp)
+temp = temp.split("', '")
+temp = temp[1][:-2]
+
+#print (temp)
+#print(dir_path + "/" + temp + "old.json")
+filename = dir_path + "/" + temp + "old.json"
+with open(filename, "w") as myfile:
     myfile.write(json.dumps(dictS))
 
 #############################

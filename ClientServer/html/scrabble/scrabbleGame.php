@@ -12,13 +12,12 @@ session_set_cookie_params(0, "/var/www/html", "localhost");
 session_start();
 */
 
-//$_SESSION["login"] = True;
 
-
-
-//$_SESSION["user"]= "Bill";
-//$_SESSION["turn"] = 0;
-
+//testing
+$_SESSION["login"] = True;
+$_SESSION["user"]= "Bill";
+$_SESSION["turn"] = 0;
+$_SESSION["gameID"] = 1;
 
 //checks whether or not file exists to make sure that game was not quit intentionally or if a new game was started
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
@@ -35,6 +34,7 @@ if(!isset($_SESSION["login"])){
 }
 else{
 	$user = $_SESSION["user"];
+	$gameID = $_SESSION["gameID"];
 }
 
 if(!$_SESSION["login"]){
@@ -169,6 +169,7 @@ function init(){
 //	console.log(newGame)
 //	newGame = true
 	user = "<?php print $user; ?>"
+	gameID = "<?php  print $gameID; ?>"
 	console.log("New Game: " + newGame)
 	if(newGame){
 		turnZero()
@@ -183,7 +184,7 @@ function init(){
 		turn = stats["turn"]
 		console.log(stats)
 		
-		var result = fetchFile("python/old.json")
+		var result = fetchFile("python/" + gameID + "old.json")
 		board = result["board"]
 		origboard = JSON.parse(JSON.stringify(board));
 		
@@ -204,6 +205,56 @@ function init(){
 	}
 	
 
+}
+
+
+
+
+
+
+
+function turnZero(){
+	console.log("init Function")
+	jsonBoard = executePythonScript("python/" + "generateBoard.py " + gameID);
+
+	//console.log(jsonBoard)
+	
+	result = jsonBoard
+	console.log(result)
+	board = result["board"]
+	//need to stringify first in order to get a non pointer object
+	
+	origboard = JSON.parse(JSON.stringify(board));
+	//turn = result["turn"]
+	turn = 0
+	pieces = result["pieces"]
+	score = 0
+	
+	document.getElementById("turnCount").value = user
+	document.getElementById("turnCount").value = score.toString()
+	
+	
+	
+	writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
+	console.log(board)
+	
+	htmlBoard = ""
+	htmlBoard = redrawBoard(board)
+	
+	playerPieces = []
+	temp = allotPieces(pieces, playerPieces)
+	pieces = temp["pieces"]
+	playerPieces = temp["newPieces"]
+	//console.log(pieces)
+	//console.log(playerPieces)
+	
+	
+	document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
+	document.getElementById("user").value = user;
+	document.getElementById("turnCount").value = turn.toString()
+	document.getElementById("scoreHolder").value = score.toString()
+	showPieces(playerPieces)
+	
 }
 
 function fetchFile(filename){
@@ -229,53 +280,6 @@ function fetchFile(filename){
 	});
 	return temp
 }
-
-
-
-
-
-function turnZero(){
-	console.log("init Function")
-	jsonBoard = executePythonScript("python/generateBoard.py");
-
-	//console.log(jsonBoard)
-	
-	result = jsonBoard
-	board = result["board"]
-	//need to stringify first in order to get a non pointer object
-	origboard = JSON.parse(JSON.stringify(board));
-	//turn = result["turn"]
-	turn = 0
-	pieces = result["pieces"]
-	score = 0
-	
-	document.getElementById("turnCount").value = user
-	document.getElementById("turnCount").value = score.toString()
-	
-	
-	
-	writeBoardFile(board, turn, pieces, "python/old.json")
-	console.log(board)
-	
-	htmlBoard = ""
-	htmlBoard = redrawBoard(board)
-	
-	playerPieces = []
-	temp = allotPieces(pieces, playerPieces)
-	pieces = temp["pieces"]
-	playerPieces = temp["newPieces"]
-	//console.log(pieces)
-	//console.log(playerPieces)
-	
-	
-	document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
-	document.getElementById("user").value = user;
-	document.getElementById("turnCount").value = turn.toString()
-	document.getElementById("scoreHolder").value = score.toString()
-	showPieces(playerPieces)
-	
-}
-
 
 function executePythonScript(filename){
 	console.log("executePythonScript Function")
@@ -647,9 +651,9 @@ function checkFirstTurn(){
 
 function turnEnd(board, origboard, turn, pieces, playerPieces){
 	console.log("turnEnd Function")
-	writeBoardFile(board, turn, pieces, "python/temp.json")
+	writeBoardFile(board, turn, pieces, "python/" + gameID + "temp.json")
 
-	var tempresult = executePythonScript("python/turnEnd.py")
+	var tempresult = executePythonScript("python/turnEnd.py " + gameID)
 	//tempresult = JSON.parse(result);
 	var changedWords = tempresult["words"];
 	var tempBoard = tempresult["board"];
@@ -663,6 +667,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	console.log(charactersUsed)
 	console.log(changedWords)
 	var wordExists = callWordsAPI(changedWords)
+	//testing
+	wordExists = true
+	
 	console.log("word exists" + wordExists)
 	
 	if(wordExists && charactersUsed && firstTurnIdent){
@@ -710,7 +717,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		});
 		
 
-		writeBoardFile(board, turn, pieces, "python/old.json")
+		writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
 		location.reload();
 		
 

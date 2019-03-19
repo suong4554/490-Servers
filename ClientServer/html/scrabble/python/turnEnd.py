@@ -1,3 +1,4 @@
+import sys
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__)) + "/"
 import json
@@ -266,9 +267,14 @@ def returnJson(board, score_words):
 
 
 #############################
-fileName = dir_path + "temp.json"
+temp = str(sys.argv)
+#print(temp)
+temp = temp.split("', '")
+temp = temp[1][:-2]
+
+fileName = dir_path + "/" + temp + "temp.json"
 newBoard = getBoard(fileName)
-fileName = dir_path + "old.json"
+fileName = dir_path + "/" + temp + "old.json"
 oldBoard = getBoard(fileName)
 
 newWordLocation = detectChanges(oldBoard, newBoard)
