@@ -159,6 +159,20 @@ if(!$_SESSION["login"]){
 <div id="pieceContainer">
 
 </div>
+
+<div id ="ChatMessages">
+</div>
+
+<div id ="ChatBig">
+
+	<span style =color:green">Chat</span><br/>
+
+	<textarea id ="ChatText" name="ChatText"></textarea>
+
+</div>
+<script src="jquery.js"></script>
+<script src="chatbox.js"></script>
+
 </body>
 
 
@@ -775,8 +789,8 @@ function endGame(){
 	location.replace("../home.php")
 	
 }
-	
 
+	
 
 
 </script>
