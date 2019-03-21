@@ -46,9 +46,7 @@ if(!$_SESSION["login"]){
 ?>
 <html>
 <head>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
 </head>
@@ -170,6 +168,7 @@ function init(){
 //	newGame = true
 	user = "<?php print $user; ?>"
 	gameID = "<?php  print $gameID; ?>"
+	letters = /^[A-Za-z]+$/;
 	console.log("New Game: " + newGame)
 	if(newGame){
 		turnZero()
@@ -637,7 +636,7 @@ function checkFirstTurn(){
 	console.log("checkFirstTurn Function")
 	var temp = true
 	if(newGame){
-		if(board[7][7][2] === ""){
+		if(!board[7][7][2].match(letters)){
 			temp = false
 		}
 	}
@@ -647,6 +646,78 @@ function checkFirstTurn(){
 	return temp
 	
 }
+
+
+
+function checkAdjacent(){
+	var boardSize = board.length;
+	
+	for(var i = 0; i < boardSize; i++){
+		for(var j = 0; j < boardSize; j++){
+			if(board[i][j][2].match(letters)){
+				if(i > 0 && i < 14){
+					if (j > 0 && j < 14){
+						console.log("here")
+						if(board[i-1][j][2].match(letters) || board[i+1][j][2].match(letters) || board[i][j+1][2].match(letters) || board[i][j-1][2].match(letters)){
+							console.log(board[i-1][j][2] + board[i+1][j][2] + board[i][j+1] +  board[i][j-1] )
+							return true
+						}
+					}
+					else if(j == 0){
+						if(board[i-1][j][2].match(letters) || board[i+1][j][2].match(letters) || board[i][j+1].match(letters)){
+							return true
+						}
+					}
+					else if(j==14){
+						if(board[i-1][j][2].match(letters) || board[i+1][j][2].match(letters) || board[i][j-1].match(letters)){
+							return true
+						}
+					}
+				}
+				else if(i == 0){
+					if (j > 0 && j < 14){
+						if(board[i+1][j][2].match(letters) || board[i][j+1][2].match(letters) || board[i][j-1][2].match(letters)){
+							return true
+						}
+					}
+					else if(j == 0){
+						if(board[i+1][j][2].match(letters) || board[i][j+1][2].match(letters)){
+							return true
+						}
+					}
+					else if(j==14){
+						if(board[i+1][j][2].match(letters) || board[i][j-1][2].match(letters)){
+							return true
+						}
+					}
+				}
+				else if(i == 14){
+					if (j > 0 && j < 14){
+						if(board[i-1][j][2].match(letters) || board[i][j+1][2].match(letters) || board[i][j-1][2].match(letters)){
+							return true
+						}
+					}
+					else if(j == 0){
+						if(board[i-1][j][2].match(letters) || board[i][j+1][2].match(letters)){
+							return true
+						}
+					}
+					else if(j==14){
+						if(board[i-1][j][2].match(letters) || board[i][j-1][2].match(letters)){
+							return true
+						}
+					}
+				}
+
+			}
+			
+		}
+	}
+	return false
+	
+	
+}
+
 
 
 function turnEnd(board, origboard, turn, pieces, playerPieces){
@@ -671,8 +742,11 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	wordExists = true
 	
 	console.log("word exists" + wordExists)
+	var adjacent = false
+	adjacent = checkAdjacent()
+	console.log("adjacent is" + adjacent)
 	
-	if(wordExists && charactersUsed && firstTurnIdent){
+	if(wordExists && charactersUsed && firstTurnIdent && adjacent){
 	
 		turn +=1
 		board = tempBoard
@@ -718,12 +792,16 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		
 
 		writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
-		location.reload();
+		//location.reload();
 		
 
 	}
+
 	else if(!firstTurnIdent){
 		alert("Please place a piece in the middle of the board")
+	}
+	else if(!adjacent){
+		alert("Please place pieces adjacent to each other (single letter words are not allowed such as 'a' or 'I')")
 	}
 	else if(!charactersUsed){
 		alert("Please use characters that were alloted at beginning of turn")
