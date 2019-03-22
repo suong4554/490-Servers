@@ -5,7 +5,7 @@ session_start();
 
 include ("Function.php");
 
-print($_SESSION["login"]);
+//print($_SESSION["login"]);
 
 if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
@@ -51,7 +51,7 @@ if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 		<h2>Home Menu</h2>
 		<br>
 		<div class="card bg-light text-dark">
-			<button onClick="location.href = 'scrabble/scrabbleGame.php'" id='playScrabble' class="btn btn-primary">
+			<button onClick="location.href = 'findMatch.php'" id='playScrabble' class="btn btn-primary">
 				<div class="card-body">Play Scrabble</div>
 			</button>
 		</div>

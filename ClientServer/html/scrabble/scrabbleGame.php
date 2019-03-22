@@ -1,46 +1,55 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);	
-#date_default_timezone_set("America/New_York");
-//session_set_cookie_params(0, "/var/www/html", "localhost");
 session_start();
-/*
-$_SESSION = array();
-#clear session from disk
-session_destroy();
-session_set_cookie_params(0, "/var/www/html", "localhost");
-session_start();
-*/
 
+include("../account.php");
+include("matchmaking/Function.php");
+$db = mysqli_connect($servername, $username, $password , $project);
+if (mysqli_connect_errno())
+  {
+	  $message = "Failed to connect to MySQL: " . mysqli_connect_error();
+	  echo $message;
+	  error_log($message);
+	  exit();
+  }
 
 //testing
-$_SESSION["login"] = True;
-$_SESSION["user"]= "Bill";
-$_SESSION["turn"] = 0;
-$_SESSION["gameID"] = 1;
+
+#$_SESSION["login"] = True;
+#$_SESSION["user"]= "Bill";
+#$_SESSION["turn"] = 0;
+#$_SESSION["gameID"] = 1;
+
+
+if(!$_SESSION["login"]){
+	redirect("", "../index.php", 0);
+	exit;
+}
+
 
 //checks whether or not file exists to make sure that game was not quit intentionally or if a new game was started
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
-
-
 $newGame = "true";
 if(file_exists($filename)){
 	$newGame = "false";
 }
-//echo $newGame;
+
 
 if(!isset($_SESSION["login"])){
    $_SESSION["login"] = False;
 }
 else{
 	$user = $_SESSION["user"];
-	$gameID = $_SESSION["gameID"];
+	print($user);
+	$gameID = findInfo($user, "Matchid");
+	$_SESSION["gameID"] = $gameID;
+	
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	print(json_encode($turnPriority));
+	$turn = findInfo($user, "turn");
 }
 
-if(!$_SESSION["login"]){
-	header('Location: localhost');
-	exit;
-}
 
 
 ?>
@@ -150,10 +159,12 @@ if(!$_SESSION["login"]){
 <button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
 <br>
 <label>User:</label><input type="text" id="user" readonly></input>
+<label>Opponent:</label><input type="text" id="user2" readonly></input>
+<br>
+<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
+<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
 <br>
 <label>Turn:</label><input type="text" id="turnCount" readonly></input>
-<br>
-<label>Score:</label><input type="text" id="scoreHolder" readonly></input>
 <br>
 
 <div id="pieceContainer">
@@ -170,46 +181,166 @@ function init(){
 //	newGame = true
 	user = "<?php print $user; ?>"
 	gameID = "<?php  print $gameID; ?>"
+	turnPriority = ("<?php print json_encode($turnPriority); ?>" == 'true')
+	user2 = getOtherUser()
+	score2 = getUserScore(user2)
+	score = getUserScore(user)
+	
 	letters = /^[A-Za-z]+$/;
 	console.log("New Game: " + newGame)
-	if(newGame){
-		turnZero()
+	
+	if(turnPriority== false){
+		//window.location.replace("waitingForTurn.php");
 	}
-	else{
-		var filename = "gameState/" + user + "gameState.txt"
-		var stats = fetchFile(filename)
-		user = stats["user"]
-		score = stats["score"]
-		playerPieces = stats["playerPieces"]
-		pieces = stats["pieces"]
-		turn = stats["turn"]
-		console.log(stats)
-		
-		var result = fetchFile("python/" + gameID + "old.json")
-		board = result["board"]
-		origboard = JSON.parse(JSON.stringify(board));
-		
-		
-		
-		//for the pieces
+	
+	if(turnPriority){
+		if(newGame){
+			turnZero()
+		}
+		else{
+			var filename = "gameState/" + user + "gameState.txt"
+			var stats = fetchFile(filename)
+			user = stats["user"]
+			score = stats["score"]
+			playerPieces = stats["playerPieces"]
+			pieces = stats["pieces"]
+			turn = stats["turn"]
+			console.log(stats)
+			
+			var result = fetchFile("python/" + gameID + "old.json")
+			board = result["board"]
+			origboard = JSON.parse(JSON.stringify(board));
+			
+			
+			
+			//for the pieces
 
-		temp = allotPieces(pieces, playerPieces)
-		pieces = temp["pieces"]
-		playerPieces = temp["newPieces"]
-		htmlBoard = redrawBoard(board)
-		
-		document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
-		document.getElementById("user").value = user;
-		document.getElementById("turnCount").value = turn.toString()
-		document.getElementById("scoreHolder").value = score.toString()
-		showPieces(playerPieces)
+			temp = allotPieces(pieces, playerPieces)
+			pieces = temp["pieces"]
+			playerPieces = temp["newPieces"]
+			htmlBoard = redrawBoard(board)
+			
+			document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
+			document.getElementById("user").value = user;
+			document.getElementById("turnCount").value = turn.toString()
+			document.getElementById("scoreHolder").value = score.toString()
+			document.getElementById("user2scoreHolder").value = score2.toString()
+			document.getElementById("user2").value = user2;
+			showPieces(playerPieces)
+			
+			
+			//writes to file to ensure that pieces are not reloaded
+			var filename = "gameState/" + user + "gameState.txt"
+			
+			var dict = {};
+			dict["playerPieces"] = playerPieces
+			dict["score"] = score
+			dict["user"] = user
+			dict["turn"] = turn
+			dict["pieces"] = pieces
+			jsonString = JSON.stringify(dict)
+			//console.log(jsonString)
+			console.log(filename)
+			console.log(dict["score"])
+			$.ajax({
+				type:'POST',
+				async: false,
+				url: "writeToFile.php",
+				data: {json: jsonString, file: filename},
+				dataType: "json"
+				
+			})
+			.done(function(msg){
+				console.log("succefully wrote to file");
+				//console.log(msg);
+			})
+			.fail(function(msg){
+				console.log("failed to write to file");
+				console.log(msg);
+			});
+			
+
+			writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
+					
+					
+		}
 	}
 	
 
 }
 
 
+function getTurnPriority(){
+	var turnPriority = false
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"discoverPriority"},
+		beforeSend: function() {
+			console.log("Getting turn Priority")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("turnPriority" + result)
+			turnPriority = result;
+		}
+	});	
+	console.log("turnPriority: " + turnPriority)
+	return turnPriority
+}
 
+
+function getOtherUser(){
+	var otherUser = ""
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getOtherUserinGame", user1:user},
+		beforeSend: function() {
+			console.log("Getting other User")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("other user is:" + result)
+			otherUser = result;
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return otherUser
+}
+
+function getUserScore(user){
+	var score = ""
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getUserScore", user1:user},
+		beforeSend: function() {
+			console.log("Getting User Score")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			//$("#centerloader").removeClass("loader");
+			console.log( user + "'s score is:" + result)
+			score = result;
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return score
+}
 
 
 
@@ -229,7 +360,7 @@ function turnZero(){
 	//turn = result["turn"]
 	turn = 0
 	pieces = result["pieces"]
-	score = 0
+	//score = 0
 	
 	document.getElementById("turnCount").value = user
 	document.getElementById("turnCount").value = score.toString()
@@ -254,7 +385,42 @@ function turnZero(){
 	document.getElementById("user").value = user;
 	document.getElementById("turnCount").value = turn.toString()
 	document.getElementById("scoreHolder").value = score.toString()
+	document.getElementById("user2scoreHolder").value = score2.toString()
+	document.getElementById("user2").value = user2;
 	showPieces(playerPieces)
+	
+	//writes gamestate at start to ensure that reloading page does not allow for a refresh of pieces
+	var filename = "gameState/" + user + "gameState.txt"
+			
+	var dict = {};
+	dict["playerPieces"] = playerPieces
+	dict["score"] = score
+	dict["user"] = user
+	dict["turn"] = turn
+	dict["pieces"] = pieces
+	jsonString = JSON.stringify(dict)
+	//console.log(jsonString)
+	console.log(filename)
+	console.log(dict["score"])
+	$.ajax({
+		type:'POST',
+		async: false,
+		url: "writeToFile.php",
+		data: {json: jsonString, file: filename},
+		dataType: "json"
+		
+	})
+	.done(function(msg){
+		console.log("succefully wrote to file");
+		//console.log(msg);
+	})
+	.fail(function(msg){
+		console.log("failed to write to file");
+		console.log(msg);
+	});
+	
+
+	writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
 	
 }
 
@@ -627,7 +793,7 @@ function logOut(){
 		console.log("failed to remove cookies and delete gamestate file");
 		console.log(msg);
 	});
-	
+	endMatch()
 	location.replace("../index.php")
 	
 }
@@ -648,6 +814,8 @@ function checkFirstTurn(){
 	return temp
 	
 }
+
+
 
 
 
@@ -716,10 +884,88 @@ function checkAdjacent(){
 		}
 	}
 	return false
-	
-	
 }
 
+function updateMatch(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"updateMatch", user1:user, turn: turn},
+		beforeSend: function() {
+			console.log("Updating Match")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("match updated")
+		}
+	});	
+}
+
+
+function switchTurn(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"switchTurn", user1:user, user2: user2},
+		beforeSend: function() {
+			console.log("Updating Turns")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("Turns updated")
+		}
+	});	
+}
+
+function updateUserScore(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"updateUserScore", user1:user, score:score},
+		beforeSend: function() {
+			console.log("Updating User Score")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log(user + "'s Score updated")
+		}
+	});	
+}
+
+function endMatch(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"endMatch", user1:user, user2, user2},
+		beforeSend: function() {
+			console.log("Ending Match")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("Match Ended")
+		}
+	});	
+}
 
 
 function turnEnd(board, origboard, turn, pieces, playerPieces){
@@ -763,7 +1009,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		var filename = "gameState/" + user + "gameState.txt"
 		
 		
-		
+		updateMatch()
+		switchTurn()
+		updateUserScore()
 		
 		var dict = {};
 		dict["playerPieces"] = playerPieces
@@ -794,7 +1042,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		
 
 		writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
-		//location.reload();
+		location.reload();
 		
 
 	}
@@ -819,8 +1067,8 @@ function endGame(){
 	console.log("Game ending")
 	
 	//need to change later so that way when two users connect can get proper results
-	var score2 = 0
-	var user2 = "Joel"
+	//var score2 = 0
+	//var user2 = "Joel"
 	var winner = "user"
 	if(score > score2){
 		winner = user
@@ -850,7 +1098,7 @@ function endGame(){
 		console.log("failed to write to SQL");
 		console.log(msg);
 	});
-
+	endMatch()
 	alert("Winner is " + winner + ", you will be redirected to the home page shortly")
 	location.replace("../home.php")
 	

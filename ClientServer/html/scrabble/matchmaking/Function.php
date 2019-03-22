@@ -4,7 +4,7 @@
 function initiateSearch($user) { 
   global $db;
   #Looking is set to 1 when looking and 0 when match is in progress
-  $s = "insert into matches (Username, Looking) values ('$user',1)";
+  $s = "insert into matches (Username, Looking, currentTurn) values ('$user',1,1)";
   $t = mysqli_query ( $db , $s );
 ;}
 
@@ -22,7 +22,6 @@ function findMatch(){
 	}
 	else{
 		$num =  mysqli_num_rows($t); 
-		print_r($num);
 		
 		if ( $num > 1 ) {
 			$t = true  ;} 
@@ -38,12 +37,21 @@ function getOtherUser($user){
 	global $db;
 	$s = "SELECT Username FROM matches where Looking = 1 AND Username != '$user'";
 	$t = mysqli_query ( $db , $s );
-	$row = mysql_fetch_array($t);
+	$row = mysqli_fetch_array($t);
 	$temp = $row['Username'];
 	return $temp;
 	
 }
 
+
+function getOtherUserinGame($user){
+	global $db;
+	$s = "SELECT Username FROM matches where Username != '$user'";
+	$t = mysqli_query ( $db , $s );
+	$row = mysqli_fetch_array($t);
+	$temp = $row['Username'];
+	return $temp;
+}
 
 
 function initiateMatch($user1, $user2){
@@ -51,17 +59,58 @@ function initiateMatch($user1, $user2){
 	global $db;
 	$s = "SELECT MAX(Matchid) AS mostRecentMatch FROM matches";
 	$t = mysqli_query ( $db , $s );
-	$row = mysql_fetch_array($t);
+	$row = mysqli_fetch_array($t);
 	$maxID = $row['mostRecentMatch'];
 	$ID = $maxID + 1;
 	
 	#turn priority will be given to whoever has currentTurn of 0
-	$s = "UPDATE matches SET turn = 0, Matchid = $ID, currentTurn = 0, Looking = 0 WHERE Username = '$user1'";
+	$s = "UPDATE matches SET turn = 0, Matchid = $ID, currentTurn = 0, Looking = 0, score = 0 WHERE Username = '$user1' AND Looking = 1";
 	$t = mysqli_query ( $db , $s );
-	$s = "UPDATE matches SET turn = 0, Matchid = $ID, currentTurn = 1, Looking = 0 WHERE Username = '$user2'";
+	$s = "UPDATE matches SET turn = 0, Matchid = $ID, currentTurn = 1, Looking = 0, score = 0 WHERE Username = '$user2' AND Looking = 1";
 	$t = mysqli_query ( $db , $s );
 	
 }
+
+function discoverPriority($user){
+	global $db;
+	usleep(800000);
+	$s = "SELECT currentTurn FROM matches WHERE Username = '$user'";
+	$t = mysqli_query($db, $s);
+	$row = mysqli_fetch_array($t);
+	$temp = $row['currentTurn'];
+	return ($temp);
+	
+}
+
+
+function getUserScore($user){
+	global $db;
+	$s = "SELECT score FROM matches WHERE Username = '$user'";
+	$t = mysqli_query($db, $s);
+	$row = mysqli_fetch_array($t);
+	$temp = $row["score"];
+	return $temp;
+	
+}
+
+
+function updateUserScore($user, $score){
+	global $db;
+	$s = "UPDATE matches SET score = $score WHERE Username = '$user'";
+	$t = mysqli_query($db, $s);
+}
+
+
+function findInfo($user, $information){
+	global $db;
+	$s = "SELECT $information FROM matches WHERE Username = '$user'";
+	$t = mysqli_query($db, $s);
+	$row = mysqli_fetch_array($t);
+	$temp = $row[$information];
+	return	$temp;
+	
+}
+
 
 function switchTurn($user1, $user2){
 	global $db;
@@ -73,13 +122,8 @@ function switchTurn($user1, $user2){
 }
 
 
-function updateMatch($user1, $user2){
+function updateMatch($user1, $turn){
 	global $db;
-	$s = "SELECT turn AS turn FROM matches WHERE Username = '$user1'";
-	$t = mysqli_query( $db , $s );
-	$row = mysql_fetch_array($t);
-	$turn = $row['turn'];
-	$turn = $turn +=1;
 	$s = "UPDATE matches SET turn = $turn WHERE Username = '$user1' OR Username = '$user2'";
 	$t = mysqli_query ( $db , $s );
 	
@@ -96,6 +140,15 @@ function endMatch($user1, $user2){
 	
 }
 
+function updateScore($user1, $score){
+	global $db; 
+	$s = "SELECT score FROM matches WHERE Username = '$user1'";
+	$t = mysqli_query( $db , $s );
+	$row = mysqli_fetch_array($t);
+	$scoreAppend = $row['score'] + $score;
+	$s = "UPDATE matches SET score = $scoreAppend WHERE Username = '$user1'";
+	$t = mysqli_query( $db , $s );
+}
 
 
 function cancelSearch($user1){

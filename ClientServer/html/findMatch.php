@@ -2,9 +2,10 @@
 //Wanted to note that SQL is called locally since this is basically used as a cache for only matchmaking. 
 //If we continuously call rabbitmq in a while loop to send and receive message, we end up "clogging" the queue causing it to freeze
 //Thus we call SQL locally by design choice, not because we did not know how to code this step
-
+date_default_timezone_set("America/New_York");
+session_set_cookie_params(0, "/var/www/html");
 session_start();
-
+$_SESSION = array();
 include("account.php");
 include("scrabble/matchmaking/Function.php");
 
@@ -18,6 +19,7 @@ ini_set('display_errors',on);
 //testing
 $_SESSION["login"] = True;
 $_SESSION["user"]= "Bill";
+print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
@@ -40,6 +42,9 @@ if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
 	exit();
 }
+elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt")){
+	redirect("", "scrabble/scrabbleGame.php", 0);
+}
 else{
 	$user = $_SESSION["user"];
 	//Puts player into sql table for matchmaking
@@ -54,7 +59,6 @@ else{
 	
 	if($peasant){
 		$dominance = false;
-		sleep(1);
 		redirect("", "scrabble/scrabbleGame.php", 0);
 	}
 	else{
@@ -71,11 +75,9 @@ else{
 
 <script src="libraries/jquery-3.3.1.min.js"></script>
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script defer src="libraries/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
+<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
 
 </header>
 
@@ -119,7 +121,7 @@ else{
 			<h5 class="card-title">Finding You a Match</h5>
 			<p id="someText" class="card-text">There will eventually be a spinning circle here</p>
 
-				<div id="centerloader"></div>
+				<div id="centerloader" class="loader"></div>
 
 			<button onclick="cancel()" class="btn btn-primary">Cancel</button>
 		</div>
@@ -136,34 +138,37 @@ function init(){
 	user = "<?php print $user; ?>"
 	//InitiateSearch was executed in php segment of code
 	if(dominance){
-		$("#centerloader").addClass("loader");
+		
 		var temp = false
+	
 		while(temp == false){
+		
 			temp = searchForMatches()
-			document.getElementById("someText").innerHTML = temp
+			console.log(temp)
 		}
-		$("#centerloader").removeClass("loader");
-		otherUser = getOtherUser()
-		document.getElementById("someText").innerHTML = otherUser
-		console.log(otherUser)
-		
-		initiateMatch()
-		
-		
+
+		if(temp){
+			$("#centerloader").removeClass("loader");
+			otherUser = getOtherUser()
+			console.log(otherUser)
+			
+			initiateMatch()
+			window.location.replace("scrabble/scrabbleGame.php");
+		}
 	}
 	
 }
-init()
 
 function searchForMatches(){
 	var matchAvailable = false
 	$.ajax({
 		url: 'scrabble/matchmaking/executeFunction.php',
 		type: 'POST',
-		async: false, //async should be enabled otherwise it will kill the system
+		async: false,
 		data:{fName:"findMatch"},
 		beforeSend: function() {
 			//$("#centerloader").addClass("loader");
+			console.log("Searching for matches")
 		},
 		fail: function(xhr, status, error) {
 			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
@@ -171,20 +176,21 @@ function searchForMatches(){
 	
 		success: function(result) {
 			//$("#centerloader").removeClass("loader");
-			matchAvailable = result;
+			console.log("findmatch" + result)
+			matchAvailable = (result == 'true');
 		}
 	});	
 	//returns true if a match is found, otherwise returns false
-	//return true
+	console.log("matchesAvailable: " + matchAvailable)
 	return matchAvailable
 }
 
-
 function getOtherUser(){
-	var otherUser = false
+	var otherUser = ""
 	$.ajax({
 		url: 'scrabble/matchmaking/executeFunction.php',
 		type: 'POST',
+		async: false,
 		data:{fName:"getOtherUser", user1:user},
 		beforeSend: function() {
 			console.log("Getting other User")
@@ -196,6 +202,7 @@ function getOtherUser(){
 	
 		success: function(result) {
 			//$("#centerloader").removeClass("loader");
+			console.log("other user is:" + result)
 			otherUser = result;
 		}
 	});	
@@ -210,6 +217,7 @@ function initiateMatch(){
 	$.ajax({
 		url: 'scrabble/matchmaking/executeFunction.php',
 		type: 'POST',
+		async: false,
 		data:{fName:"initiateMatch", user1:user, user2:otherUser},
 		beforeSend: function() {
 			console.log("Initiating match on SQL Database")
@@ -241,7 +249,7 @@ function cancel(){
 	});	
 	window.location.replace("home.php");
 }
-
+window.onload = init()
 </script>
 
 
