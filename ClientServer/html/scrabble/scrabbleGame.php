@@ -46,7 +46,9 @@ if(!$_SESSION["login"]){
 ?>
 <html>
 <head>
-<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script defer src="../libraries/jquery-3.3.1.min.js"></script>
+<!-- <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 <!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
 </head>
