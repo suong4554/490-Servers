@@ -1,18 +1,15 @@
 <?php
 
-$path = "test.log";
-echo "Path : $path";
-require $path;
+$di = new RecursiveDirectoryIterator(__DIR__,RecursiveDirectoryIterator::SKIP_DOTS);
+$it = new RecursiveIteratorIterator($di);
 
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set("error_log", "test.log");
-echo "\n";
-
-foreach(glob('dir/*.php') as $file) {
-	include $file;
-	echo ("$file");
+foreach($it as $file) {
+    if (pathinfo($file, PATHINFO_EXTENSION) == "php") {
+	echo $file, PHP_EOL;
+	exec("$file", $ouput);
+	//print_r($output);
+	$error = shell_exec("php -l $file");
+	error_log("$error", 3,"errorlogs.log");
+    }
 }
-
 ?>
