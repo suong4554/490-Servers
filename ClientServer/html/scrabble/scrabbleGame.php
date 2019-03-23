@@ -1047,9 +1047,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	
 	console.log(charactersUsed)
 	console.log(changedWords)
-	//var wordExists = callWordsAPI(changedWords)
+	var wordExists = callWordsAPI(changedWords)
 	//testing
-	var wordExists = true
+	//var wordExists = true
 	
 	console.log("word exists" + wordExists)
 	var adjacent = false

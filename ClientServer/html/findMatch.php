@@ -17,9 +17,9 @@ ini_set('display_errors',on);
 
 
 //testing
-$_SESSION["login"] = True;
-$_SESSION["user"]= "Bill";
-print($_SESSION["user"]);
+//$_SESSION["login"] = True;
+//$_SESSION["user"]= "Bill";
+//print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
