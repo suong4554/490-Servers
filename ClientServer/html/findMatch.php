@@ -139,8 +139,9 @@ function init(){
 	//InitiateSearch was executed in php segment of code
 	if(dominance){
 		
-		var temp = false
-		var temp2 = false
+
+		interval = setInterval(checkFinish(), 500)
+		/*
 		while(temp == false && temp2 == false){
 		
 			temp = searchForMatches()
@@ -150,6 +151,7 @@ function init(){
 				break
 			}
 		}
+		*/
 
 		if(temp || temp2){
 			$("#centerloader").removeClass("loader");
@@ -163,6 +165,14 @@ function init(){
 	
 }
 
+function checkFinish(){
+	temp = searchForMatches()
+	temp2 = getLooking()
+	console.log(temp)
+	if(temp == true || temp2 == true){
+		clearInterval(interval);
+	}
+}
 
 function getLooking(){
 	var inMatch = ""
