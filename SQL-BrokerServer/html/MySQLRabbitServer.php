@@ -6,6 +6,7 @@ require_once('rabbitMQLib.inc');
 
 include('account.php');
 include('Function.php');
+include('FunctionMatchMake.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors',on);
@@ -68,6 +69,62 @@ function requestProcessor($request){
 	$result = wordCheck($request);
 	print($result);
   }
+   else if($temp == "initiateSearch"){
+	$result = initiateSearch($request['user1']);
+	print($result);
+  }
+   else if($temp == "findMatch"){
+	$result = findMatch();
+	print($result);
+  }
+   else if($temp == "getLooking"){
+	$result = getLooking($request['user1']);
+	print($result);
+  }
+  else if($temp == "checkGameState"){
+	$result = checkGameState($request);
+	print($result);
+  }
+  else if($temp == "getOtherUser"){
+	$result = getOtherUser($request['user1']);
+	print($result);
+  }
+  else if($temp == "getOtherUserinGame"){
+	$result = getOtherUserinGame($request['user1']);
+	print($result);
+  }
+  else if($temp == "initiateMatch"){
+	$result = initiateMatch($request['user1'], $request['user2']);
+	print($result);
+  }
+  else if($temp == "discoverPriority"){
+	$result = discoverPriority($request['user1']);
+	print($result);
+  }
+  else if($temp == "getUserScore"){
+	$result = getUserScore($request['user1']);
+	print($result);
+  }
+  else if($temp == "updateUserScore"){
+	$result = updateUserScore($request['user1'], $request['score1']);
+	print($result);
+  }
+  else if($temp == "switchTurn"){
+	$result = switchTurn($request['user1'], request['user2']);
+	print($result);
+  }
+  else if($temp == "updateMatch"){
+	$result = updateMatch($request['user1'], $request['turn']);
+	print($result);
+  }  
+   else if($temp == "endMatch"){
+	$result = endMatch($request['user1'], $request['user2']);
+	print($result);
+  }  
+   else if($temp == "cancelSearch"){
+	$result = cancelSearch($request['user1']);
+	print($result);
+  }  
   
   
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);
