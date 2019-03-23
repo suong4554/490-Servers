@@ -19,8 +19,8 @@ if (mysqli_connect_errno())
 mysqli_select_db( $db, $project );
 
 print("hello");
-$temp = getOtherUserinGame('Bill');
-print($temp);
+$temp = checkGameState('Bill');
+print(json_encode($temp));
 
 
 ?>

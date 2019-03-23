@@ -29,6 +29,16 @@ elseif($functionName == "findMatch"){
 	print(json_encode($temp));
 	#it prints out 1 if there's not matches available and 2 if there are
 }
+elseif($functionName == "getLooking"){
+	$user = $_POST['user1'];
+	$temp = getLooking($user);
+	print(json_encode(!$temp));
+}
+elseif($functionName == "checkGameState"){
+	$user = $_POST["user1"];
+	$temp = checkGameState($user);
+	print(json_encode($temp));
+}
 elseif($functionName == "getOtherUser"){
 	$user = $_POST['user1'];
 	$temp = getOtherUser($user);
@@ -58,7 +68,7 @@ elseif($functionName == "getUserScore"){
 }
 elseif($functionName == "updateUserScore"){
 	$user1 = $_POST["user1"];
-	$score = $_POST["score"];
+	$score = $_POST["score1"];
 	updateUserScore($user1, $score);
 }
 elseif($functionName == "switchTurn"){

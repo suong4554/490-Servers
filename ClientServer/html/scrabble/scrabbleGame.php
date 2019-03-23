@@ -157,6 +157,7 @@ else{
 </div>
 
 <button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
+<button type="button" id="pass" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
 <br>
 <label>User:</label><input type="text" id="user" readonly></input>
 <label>Opponent:</label><input type="text" id="user2" readonly></input>
@@ -188,9 +189,17 @@ function init(){
 	
 	letters = /^[A-Za-z]+$/;
 	console.log("New Game: " + newGame)
+	gameState = checkGameState()
+	console.log("gameState: " + gameState)
 	
+	if(!checkGameState()){
+		//Gamestate will be true if game exists, false if not
+		alert(user2 + " has ended or Quit the Game, you will be shortly redirected, to check match-history, click the show Match History Button on the home page")
+		location.replace("../home.php")
+		//endGame()
+	}
 	if(turnPriority== false){
-		//window.location.replace("waitingForTurn.php");
+		window.location.replace("waitingForTurn.php");
 	}
 	
 	if(turnPriority){
@@ -318,7 +327,7 @@ function getOtherUser(){
 }
 
 function getUserScore(user){
-	var score = ""
+	var score
 	$.ajax({
 		url: 'matchmaking/executeFunction.php',
 		type: 'POST',
@@ -347,20 +356,25 @@ function getUserScore(user){
 
 function turnZero(){
 	console.log("init Function")
-	jsonBoard = executePythonScript("python/" + "generateBoard.py " + gameID);
-
-	//console.log(jsonBoard)
-	
-	result = jsonBoard
-	console.log(result)
-	board = result["board"]
-	//need to stringify first in order to get a non pointer object
-	
-	origboard = JSON.parse(JSON.stringify(board));
-	//turn = result["turn"]
-	turn = 0
-	pieces = result["pieces"]
-	//score = 0
+	//checks if user was first to go or not
+	if(score2 == 0){
+		jsonBoard = executePythonScript("python/" + "generateBoard.py " + gameID);
+		result = jsonBoard
+		console.log(result)
+		board = result["board"]
+		//need to stringify first in order to get a non pointer object
+		origboard = JSON.parse(JSON.stringify(board));
+		turn = 0
+		pieces = result["pieces"]
+	}
+	else{
+		var result = fetchFile("python/" + gameID + "old.json")
+		board = result["board"]
+		origboard = JSON.parse(JSON.stringify(board));
+		turn = 0
+		pieces = result["pieces"]
+		
+	}
 	
 	document.getElementById("turnCount").value = user
 	document.getElementById("turnCount").value = score.toString()
@@ -712,6 +726,9 @@ function checkPieces(playerPieces, origboard, board, firstTurnIdent){
 			}
 		}
 	}
+	if(origboard == board){
+		temp = true
+	}
 	console.log(playerPieces)
 	playerPieces = tempPieces.slice(0);
 	console.log(playerPieces)
@@ -827,9 +844,7 @@ function checkAdjacent(){
 			if(board[i][j][2].match(letters)){
 				if(i > 0 && i < 14){
 					if (j > 0 && j < 14){
-						console.log("here")
 						if(board[i-1][j][2].match(letters) || board[i+1][j][2].match(letters) || board[i][j+1][2].match(letters) || board[i][j-1][2].match(letters)){
-							console.log(board[i-1][j][2] + board[i+1][j][2] + board[i][j+1] +  board[i][j-1] )
 							return true
 						}
 					}
@@ -932,7 +947,7 @@ function updateUserScore(){
 		url: 'matchmaking/executeFunction.php',
 		type: 'POST',
 		async: false,
-		data:{fName:"updateUserScore", user1:user, score:score},
+		data:{fName:"updateUserScore", user1:user, score1:score},
 		beforeSend: function() {
 			console.log("Updating User Score")
 			//$("#centerloader").addClass("loader");
@@ -947,28 +962,75 @@ function updateUserScore(){
 	});	
 }
 
-function endMatch(){
+function checkGameState(){
+	var matchStat
 	$.ajax({
 		url: 'matchmaking/executeFunction.php',
 		type: 'POST',
 		async: false,
-		data:{fName:"endMatch", user1:user, user2, user2},
+		data:{fName:"checkGameState", user1: user},
 		beforeSend: function() {
-			console.log("Ending Match")
-			//$("#centerloader").addClass("loader");
+			console.log("Checking Match status")
 		},
 		fail: function(xhr, status, error) {
 			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
 		},
 	
 		success: function(result) {
-			console.log("Match Ended")
+			matchStat = (result == 'true');
+		}
+	});	
+	return matchStat
+}
+
+function getLooking(){
+	var inMatch = ""
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getLooking", user1:user},
+		beforeSend: function() {
+			console.log("Getting Looking stat")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			inMatch = (result == 'true');
+			console.log("user currently in match:" + inMatch)
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return inMatch
+}
+
+function endMatch(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"endMatch", user1:user, user2:user2},
+		beforeSend: function() {
+			console.log("Ending Match")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			console.log("Ended Match")
 		}
 	});	
 }
 
-
 function turnEnd(board, origboard, turn, pieces, playerPieces){
+	if(!checkGameState()){
+		//Gamestate will be true if game exists, false if not
+		alert(user2 + " has ended the game")
+		endGame()
+	}
+	
+	
 	console.log("turnEnd Function")
 	writeBoardFile(board, turn, pieces, "python/" + gameID + "temp.json")
 
@@ -977,28 +1039,27 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	var changedWords = tempresult["words"];
 	var tempBoard = tempresult["board"];
 	var tempscore = tempresult["score"];
-	
-	
+	console.log("tempScore is: " + tempscore)
+	console.log("score is: " + score)
 	var firstTurnIdent = checkFirstTurn()
 	console.log(firstTurnIdent)
 	var charactersUsed = checkPieces(playerPieces, origboard, board, firstTurnIdent)
 	
 	console.log(charactersUsed)
 	console.log(changedWords)
-	var wordExists = callWordsAPI(changedWords)
+	//var wordExists = callWordsAPI(changedWords)
 	//testing
-	wordExists = true
+	var wordExists = true
 	
 	console.log("word exists" + wordExists)
 	var adjacent = false
 	adjacent = checkAdjacent()
-	console.log("adjacent is" + adjacent)
+	console.log("adjacent is " + adjacent)
 	
 	if(wordExists && charactersUsed && firstTurnIdent && adjacent){
-	
 		turn +=1
 		board = tempBoard
-		score = tempscore[0] + score;
+		score = parseInt(tempscore, 10) + parseInt(score, 10);
 		console.log("score: " + score)
 		console.log("turn: " + turn)
 		console.log("the score is:" + score)
@@ -1062,8 +1123,50 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 
 }
 
+function pass(board, origboard, turn, pieces, playerPieces){
+	console.log("Pass Function")
+		
+	score = parseInt(score, 10);
 
+	turn +=1
+	updateMatch()
+	switchTurn()
+	updateUserScore()
+	
+	var filename = "gameState/" + user + "gameState.txt"
+	var dict = {};
+	dict["playerPieces"] = playerPieces
+	dict["score"] = score
+	dict["user"] = user
+	dict["turn"] = turn
+	dict["pieces"] = pieces
+	jsonString = JSON.stringify(dict)
+	//console.log(jsonString)
+	console.log(filename)
+	console.log(dict["score"])
+	$.ajax({
+		type:'POST',
+		async: false,
+		url: "writeToFile.php",
+		data: {json: jsonString, file: filename},
+		dataType: "json"
+		
+	})
+	.done(function(msg){
+		console.log("succefully wrote to file");
+		//console.log(msg);
+	})
+	.fail(function(msg){
+		console.log("failed to write to file");
+		console.log(msg);
+	});
+	
+	writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
+	location.reload();
+
+}
 function endGame(){
+	switchTurn()
 	console.log("Game ending")
 	
 	//need to change later so that way when two users connect can get proper results
@@ -1099,7 +1202,7 @@ function endGame(){
 		console.log(msg);
 	});
 	endMatch()
-	alert("Winner is " + winner + ", you will be redirected to the home page shortly")
+	alert("Winner is " + winner + ", you will be redirected to the home page shortly: Note if the other player ended the game then it is possible that there was no winner")
 	location.replace("../home.php")
 	
 }

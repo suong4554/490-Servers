@@ -140,14 +140,18 @@ function init(){
 	if(dominance){
 		
 		var temp = false
-	
-		while(temp == false){
+		var temp2 = false
+		while(temp == false && temp2 == false){
 		
 			temp = searchForMatches()
+			temp2 = getLooking()
 			console.log(temp)
+			if(temp || temp2){
+				break
+			}
 		}
 
-		if(temp){
+		if(temp || temp2){
 			$("#centerloader").removeClass("loader");
 			otherUser = getOtherUser()
 			console.log(otherUser)
@@ -157,6 +161,29 @@ function init(){
 		}
 	}
 	
+}
+
+
+function getLooking(){
+	var inMatch = ""
+	$.ajax({
+		url: 'scrabble/matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getLooking", user1:user},
+		beforeSend: function() {
+			console.log("Getting Looking stat")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			inMatch = (result == 'true');
+			console.log("user currently in match:" + inMatch)
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return inMatch
 }
 
 function searchForMatches(){
@@ -176,7 +203,8 @@ function searchForMatches(){
 	
 		success: function(result) {
 			//$("#centerloader").removeClass("loader");
-			console.log("findmatch" + result)
+			console.log("findmatch: " + result)
+			//matchAvailable = (result == 'true');
 			matchAvailable = (result == 'true');
 		}
 	});	
@@ -249,7 +277,10 @@ function cancel(){
 	});	
 	window.location.replace("home.php");
 }
-window.onload = init()
+$(document).ready(function(){
+init()
+});
+
 </script>
 
 

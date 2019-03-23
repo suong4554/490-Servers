@@ -138,7 +138,7 @@ function checkTurnPriority(){
 		data:{fName:"discoverPriority", user1:user},
 		beforeSend: function() {
 			//$("#centerloader").addClass("loader");
-			console.log("Searching for matches")
+			console.log("Checking turn priority")
 		},
 		fail: function(xhr, status, error) {
 			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
@@ -154,8 +154,10 @@ function checkTurnPriority(){
 	console.log("turn priority: " + turnPriority)
 	return turnPriority
 }
+$(document).ready(function(){
+init()
+});
 
-window.onload = init()
 </script>
 
 

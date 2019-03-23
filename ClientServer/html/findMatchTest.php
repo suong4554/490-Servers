@@ -21,6 +21,7 @@ $_SESSION["login"] = True;
 $_SESSION["user"]= "Sally";
 print($_SESSION["user"]);
 
+
 #################################Initiates Connection to SQL SERVER################################
 $db = mysqli_connect($servername, $username, $password , $project);
 if (mysqli_connect_errno())
@@ -143,10 +144,11 @@ function init(){
 		while(temp == false){
 		
 			temp = searchForMatches()
+			temp = getLooking()
 			console.log(temp)
 		}
 
-		if(temp){
+		if(temp || temp2){
 			$("#centerloader").removeClass("loader");
 			otherUser = getOtherUser()
 			console.log(otherUser)
@@ -156,6 +158,32 @@ function init(){
 		}
 	}
 	
+}
+
+
+function getLooking(){
+	var inMatch = ""
+	$.ajax({
+		url: 'scrabble/matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getLooking", user1:user},
+		beforeSend: function() {
+			console.log("Getting other User")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			//$("#centerloader").removeClass("loader");
+			console.log("other user is:" + inMatch)
+			inMatch = (result == 'true');
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return inMatch
 }
 
 function searchForMatches(){
@@ -216,6 +244,7 @@ function initiateMatch(){
 	$.ajax({
 		url: 'scrabble/matchmaking/executeFunction.php',
 		type: 'POST',
+		async: false,
 		data:{fName:"initiateMatch", user1:user, user2:otherUser},
 		beforeSend: function() {
 			console.log("Initiating match on SQL Database")
@@ -247,7 +276,11 @@ function cancel(){
 	});	
 	window.location.replace("home.php");
 }
-window.onload = init()
+
+$(document).ready(function(){
+init()
+});
+
 </script>
 
 

@@ -12,7 +12,7 @@ function initiateSearch($user) {
 //those who find a match that return true on the first run means that they should give up control to the 1st who joined
 function findMatch(){
 	//sleeps for .8 seconds so that the webpage doesnt kill the main browser
-	usleep(800000);
+	usleep(1000000);
 	global $db;
 	$t = false;
 	$s = "SELECT * FROM matches where Looking = 1";
@@ -22,16 +22,27 @@ function findMatch(){
 	}
 	else{
 		$num =  mysqli_num_rows($t); 
-		
 		if ( $num > 1 ) {
 			$t = true  ;} 
 		else {   
 			$t = false  ;}
 	}
-		
 	return $t;
-	
 }
+
+#use user instead of game id since initial log in will kick you out when gameID is set to null
+function checkGameState($user){
+	global $db;
+	$s = "SELECT * FROM matches where Username = '$user'";
+	$t = mysqli_query($db, $s);
+	$num =  mysqli_num_rows($t); 
+	if ( $num > 0 ) {
+		$t = true  ;} 
+	else {   
+		$t = false  ;}
+	return $t;
+}
+
 
 function getOtherUser($user){
 	global $db;
@@ -52,6 +63,17 @@ function getOtherUserinGame($user){
 	$temp = $row['Username'];
 	return $temp;
 }
+
+//When user connects in second window it helps to prevent an infinite loop where users have a state change before they can detect
+function getLooking($user){
+	global $db;
+	$s = "SELECT Looking FROM matches where Username = '$user'";
+	$t = mysqli_query ( $db , $s );
+	$row = mysqli_fetch_array($t);
+	$temp = $row['Looking'];
+	return $temp;
+}
+
 
 
 function initiateMatch($user1, $user2){
