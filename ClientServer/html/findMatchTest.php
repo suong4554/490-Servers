@@ -19,7 +19,7 @@ ini_set('display_errors',on);
 //testing
 //$_SESSION["login"] = True;
 //$_SESSION["user"]= "Sally";
-//print($_SESSION["user"]);
+print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
@@ -138,36 +138,24 @@ function init(){
 	user = "<?php print $user; ?>"
 	//InitiateSearch was executed in php segment of code
 	if(dominance){
-		interval = setInterval(checkFinish(), 500)
-		/*
-		var temp = false
-	
-		while(temp == false){
-		
-			temp = searchForMatches()
-			temp = getLooking()
-			console.log(temp)
-		}
-		*/
-
-		if(temp || temp2){
-			$("#centerloader").removeClass("loader");
-			otherUser = getOtherUser()
-			console.log(otherUser)
-			
-			initiateMatch()
-			window.location.replace("scrabble/scrabbleGame.php");
-		}
+		interval = setInterval(checkFinish, 1000)
 	}
 	
 }
 
 function checkFinish(){
 	temp = searchForMatches()
-	temp = getLooking()
-	console.log(temp)
-	if(temp == true){
+	temp2 = getLooking()
+	console.log(temp + temp2)
+	if(temp == true || temp2 == true){
 		clearInterval(interval);
+		$("#centerloader").removeClass("loader");
+		otherUser = getOtherUser()
+		console.log(otherUser)
+		
+		initiateMatch()
+		window.location.replace("scrabble/scrabbleGame.php");
+		}
 	}
 }
 

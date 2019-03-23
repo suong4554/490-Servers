@@ -113,22 +113,7 @@ function init(){
 	
 	user = "<?php print $user; ?>"
 	//InitiateSearch was executed in php segment of code
-
-	//var temp = false
-	
-	
-	interval = setInterval(checkFinish(), 500)
-	/*
-	while(temp == false){
-	
-		temp = checkTurnPriority()
-		console.log(temp)
-	}
-	*/
-
-	if(temp){
-		window.location.replace("scrabbleGame.php");
-	}
+	interval = setInterval(checkFinish, 1000)
 	
 	
 }
@@ -138,6 +123,7 @@ function checkFinish(){
 	console.log(temp)
 	if(temp == true){
 		clearInterval(interval);
+		window.location.replace("scrabbleGame.php");
 	}
 }
 

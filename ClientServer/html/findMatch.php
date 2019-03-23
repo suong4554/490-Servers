@@ -138,29 +138,8 @@ function init(){
 	user = "<?php print $user; ?>"
 	//InitiateSearch was executed in php segment of code
 	if(dominance){
+		interval = setInterval(checkFinish, 1000)
 		
-
-		interval = setInterval(checkFinish(), 500)
-		/*
-		while(temp == false && temp2 == false){
-		
-			temp = searchForMatches()
-			temp2 = getLooking()
-			console.log(temp)
-			if(temp || temp2){
-				break
-			}
-		}
-		*/
-
-		if(temp || temp2){
-			$("#centerloader").removeClass("loader");
-			otherUser = getOtherUser()
-			console.log(otherUser)
-			
-			initiateMatch()
-			window.location.replace("scrabble/scrabbleGame.php");
-		}
 	}
 	
 }
@@ -168,9 +147,15 @@ function init(){
 function checkFinish(){
 	temp = searchForMatches()
 	temp2 = getLooking()
-	console.log(temp)
+	console.log(temp + temp2)
 	if(temp == true || temp2 == true){
 		clearInterval(interval);
+		$("#centerloader").removeClass("loader");
+		otherUser = getOtherUser()
+		console.log(otherUser)
+		
+		initiateMatch()
+		window.location.replace("scrabble/scrabbleGame.php");
 	}
 }
 
@@ -277,12 +262,13 @@ function cancel(){
 	$.ajax({
 		url: 'scrabble/matchmaking/executeFunction.php',
 		type: 'POST',
+		async: false,
 		data:{fName:"cancelSearch", user1:user},
 		fail: function(xhr, status, error) {
 			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
 		},
 		success: function(result) {
-			matchAvailable = result;
+			console.log("cancelled search")
 		}
 	});	
 	window.location.replace("home.php");
