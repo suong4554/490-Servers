@@ -175,7 +175,15 @@ else{
 
 
 <script>
-
+function checkFinish(){
+	temp = checkGameState()
+	console.log(temp)
+	if(temp == false){
+		clearInterval(interval);
+		alert(user2 + " has ended or Quit the Game, you will be shortly redirected, to check match-history, click the show Match History Button on the home page")
+		location.replace("../home.php")
+	}
+}
 function init(){
 	newGame = <?php print $newGame; ?>
 //	console.log(newGame)
@@ -192,12 +200,17 @@ function init(){
 	gameState = checkGameState()
 	console.log("gameState: " + gameState)
 	
+	//Checks game state
+	interval = setInterval(checkFinish, 1000)
+	
+	/*
 	if(!checkGameState()){
 		//Gamestate will be true if game exists, false if not
 		alert(user2 + " has ended or Quit the Game, you will be shortly redirected, to check match-history, click the show Match History Button on the home page")
 		location.replace("../home.php")
 		//endGame()
 	}
+	*/
 	if(turnPriority== false){
 		window.location.replace("waitingForTurn.php");
 	}
