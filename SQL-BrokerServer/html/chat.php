@@ -1,7 +1,5 @@
 <?php 
 
-
-
 class chat 
 {
 	private $ChatId,$ChatUsername,$ChatText,$ChatGameId;
@@ -46,25 +44,11 @@ class chat
 		$stmt->execute();
 		$stmt->close();
 		$db->close();
-		//$s = "insert into chats (ChatUsername,ChatGameId,ChatText) VALUES ('$ChatUsername',$ChatGameId, '$ChatText')";
-		//$t = mysqli_query($db,$s) or die (mysqli_error($db));
 		
 		
 			
 	
 	}	
-	/*
-	public function InsertChatMessage(){
-		include "connectToDB.php";
-		$chatInsert=$db->prepare("INSERT INTO chats (ChatUsername,ChatGameId,ChatText)
-		VALUES(:ChatUsername,:ChatGameId,:ChatText)");
-		
-		$chatInsert->execute(array(
-		'ChatUsername'=>$this->getChatUsername(), 
-		'ChatGameId'=>$this->getChatGameId(), 
-		'ChatText'=>$this->getChatText() 
-		));	
-	}*/
 
 	public function DisplayMessage()
 	{

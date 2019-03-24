@@ -1,7 +1,6 @@
 <?php
 session_start();
 $user = $_POST['user'];
-//$gameId = $_POST['gameId'];
 $gameId = 0;
 
 $_SESSION['user'] = $user;

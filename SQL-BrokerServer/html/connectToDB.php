@@ -17,17 +17,5 @@ if (mysqli_connect_errno())
   }
 
 mysqli_select_db( $db, $project );
-/*
-$ChatUsername = "Edwin";
-
-$ChatGameId = 2;
-
-$ChatText = "this please";
-
-$s = "insert into chats (ChatUsername,ChatGameId,ChatText) VALUES ('$ChatUsername',$ChatGameId,'$ChatText')";
-
-$t = mysqli_query($db,$s) or die (mysqli_error($db));
- */ 
-//echo "WE have inserted";
 
 ?>
