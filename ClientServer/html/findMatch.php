@@ -2,12 +2,12 @@
 //Wanted to note that SQL is called locally since this is basically used as a cache for only matchmaking. 
 //If we continuously call rabbitmq in a while loop to send and receive message, we end up "clogging" the queue causing it to freeze
 //Thus we call SQL locally by design choice, not because we did not know how to code this step
-date_default_timezone_set("America/New_York");
-session_set_cookie_params(0, "/var/www/html");
+//date_default_timezone_set("America/New_York");
+//session_set_cookie_params(0, "/var/www/html");
 session_start();
-$_SESSION = array();
+//$_SESSION = array();
 include("account.php");
-include("scrabble/matchmaking/Function.php");
+//include("scrabble/matchmaking/Function.php");
 
 
 error_reporting(E_ALL);
@@ -38,17 +38,15 @@ mysqli_select_db( $db, $project );
 ###################################################################################################
 
 
-<<<<<<< HEAD
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-=======
->>>>>>> parent of c0765e0... rabbitmq compat
 
+$client = new rabbitMQClient('MySQLRabbit.ini', 'MySQLRabbit');
 
 if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
-	exit();
+	//exit();
 }
 elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt")){
 	redirect("", "scrabble/scrabbleGame.php", 0);
@@ -56,25 +54,23 @@ elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt"))
 else{
 	$user = $_SESSION["user"];
 	//Puts player into sql table for matchmaking
-<<<<<<< HEAD
 	
 	//Initiates search
-	$user = $_POST['user1'];
 	$request = array();
 	$request['type'] = "initiateSearch";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	
 	//Finds if someone else is looking for a match
+	sleep(1);
 	$request = array();
 	$request['type'] = "findMatch";
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$peasant = $response["result"];
-	//$peasant = findMatch();
-=======
-	initiateSearch($user);
 	$peasant = findMatch();
->>>>>>> parent of c0765e0... rabbitmq compat
+	//$peasant = true;
 	if(!$peasant){
 		print("false");
 	}

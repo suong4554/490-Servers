@@ -1,7 +1,7 @@
 <?php
 
-include("../../account.php");
-include("Function.php");
+//include("../../account.php");
+//include("Function.php");
 session_start();
 
 error_reporting(E_ALL);
@@ -10,12 +10,17 @@ ini_set('display_errors',on);
 
 
 
-require_once('../../path.inc');
-require_once('../../get_host_info.inc');
-require_once('../../rabbitMQLib.inc');
+#require_once('../../path.inc');
+#require_once('../../get_host_info.inc');
+#require_once('../../rabbitMQLib.inc');
 
-$client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
 
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+$client = new rabbitMQClient('MySQLRabbit.ini', 'MySQLRabbit');
+#$client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
 
 if(isset($_POST["fName"])){
 	$functionName = $_POST['fName'];
@@ -27,6 +32,7 @@ if($functionName == "initiateSearch"){
 	$request = array();
 	$request['type'] = "initiateSearch";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "findMatch"){
@@ -34,6 +40,7 @@ elseif($functionName == "findMatch"){
 	$request['type'] = "findMatch";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
+	$request["message"] = "ugh";
 	print(json_encode($temp));
 	#it prints out 1 if there's not matches available and 2 if there are
 }
@@ -43,6 +50,7 @@ elseif($functionName == "getLooking"){
 	$request = array();
 	$request['type'] = "getLooking";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	print(json_encode(!$temp));
@@ -52,6 +60,7 @@ elseif($functionName == "checkGameState"){
 	$request = array();
 	$request['type'] = "checkGameState";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	print(json_encode($temp));
@@ -61,6 +70,7 @@ elseif($functionName == "getOtherUser"){
 	$request = array();
 	$request['type'] = "getOtherUser";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	#temp should be equal to username of other player looking for match
@@ -71,6 +81,7 @@ elseif($functionName == "getOtherUserinGame"){
 	$request = array();
 	$request['type'] = "getOtherUserinGame";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	#temp should be equal to username of other player looking for match
@@ -83,6 +94,7 @@ elseif($functionName == "initiateMatch"){
 	$request['type'] = "initiateMatch";
 	$request['user1'] = $user1;
 	$request['user2'] = $user2;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "discoverPriority"){
@@ -90,6 +102,7 @@ elseif($functionName == "discoverPriority"){
 	$request = array();
 	$request['type'] = "discoverPriority";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	print(json_encode(!$temp));
@@ -99,6 +112,7 @@ elseif($functionName == "getUserScore"){
 	$request = array();
 	$request['type'] = "getUserScore";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 	$temp = $response["result"];
 	print ($temp);
@@ -110,6 +124,7 @@ elseif($functionName == "updateUserScore"){
 	$request['type'] = "updateUserScore";
 	$request['user1'] = $user;
 	$request['score1'] = $score;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "switchTurn"){
@@ -120,6 +135,7 @@ elseif($functionName == "switchTurn"){
 	$request['type'] = "switchTurn";
 	$request['user1'] = $user1;
 	$request['user2'] = $user2;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "updateMatch"){
@@ -131,6 +147,7 @@ elseif($functionName == "updateMatch"){
 	$request['type'] = "updateMatch";
 	$request['user1'] = $user1;
 	$request['turn'] = $turn;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "endMatch"){
@@ -140,6 +157,7 @@ elseif($functionName == "endMatch"){
 	$request['type'] = "endMatch";
 	$request['user1'] = $user1;
 	$request['user2'] = $user2;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 elseif($functionName == "cancelSearch"){
@@ -147,6 +165,7 @@ elseif($functionName == "cancelSearch"){
 	$request = array();
 	$request['type'] = "cancelSearch";
 	$request['user1'] = $user;
+	$request["message"] = "ugh";
 	$response = $client->send_request($request);
 }
 else{
