@@ -44,11 +44,9 @@ if(file_exists($filename)){
 }
 
 
-if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
-   $_SESSION["login"] = False;
-   redirect("", "../index.php", 0);
-}
-else{
+
+	
+if($_SESSION["login"]){
 	$user = $_SESSION["user"];
 	$gameID = findInfo($user, "Matchid");
 	$_SESSION["gameID"] = $gameID;
@@ -86,7 +84,10 @@ else{
 	//$turn = findInfo($user, "turn");
 	*/
 }
-
+else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
+   $_SESSION["login"] = False;
+   redirect("", "../index.php", 0);
+}
 
 
 
