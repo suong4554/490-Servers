@@ -27,6 +27,7 @@ if (mysqli_connect_errno())
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
 $newGame = "true";
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
@@ -42,6 +43,8 @@ $client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
 
 =======
 >>>>>>> parent of c0765e0... rabbitmq compat
+=======
+>>>>>>> parent of c0765e0... rabbitmq compat
 if(file_exists($filename)){
 	$newGame = "false";
 }
@@ -53,6 +56,7 @@ if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 }
 else{
 	$user = $_SESSION["user"];
+<<<<<<< HEAD
 <<<<<<< HEAD
 	//$gameID = findInfo($user, "Matchid");
 	
@@ -88,6 +92,15 @@ else{
 	$response = $client->send_request($request);
 	$turnPriority = $response["result"];
 	//$turn = findInfo($user, "turn");
+=======
+	print($user);
+	$gameID = findInfo($user, "Matchid");
+	$_SESSION["gameID"] = $gameID;
+	
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	print(json_encode($turnPriority));
+	$turn = findInfo($user, "turn");
+>>>>>>> parent of c0765e0... rabbitmq compat
 =======
 	print($user);
 	$gameID = findInfo($user, "Matchid");
