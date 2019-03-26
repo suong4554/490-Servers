@@ -42,7 +42,12 @@ if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 }
 else{
 	$user = $_SESSION["user"];
-	print($user);
+	$gameID = findInfo($user, "Matchid");
+	while($gameID == null){
+		$gameID = findInfo($user, "Matchid");
+	}
+	$_SESSION["gameID"] = $gameID;
+	//print($user);
 }
 
 
