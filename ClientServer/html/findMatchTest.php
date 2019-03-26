@@ -17,9 +17,9 @@ ini_set('display_errors',on);
 
 
 //testing
-//$_SESSION["login"] = True;
+//$_SESSION["login"] = true;
 //$_SESSION["user"]= "Sally";
-print($_SESSION["user"]);
+//print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
@@ -73,9 +73,8 @@ else{
 <header>
 <title>Scrabble Home</title>
 
-<script src="libraries/jquery-3.3.1.min.js"></script>
-
-<script defer src="libraries/jquery-3.3.1.min.js"></script>
+<!--<script defer src="libraries/jquery-3.3.1.min.js"></script> -->
+<script defer src="libraries/jquery.js"></script>
 <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
 <script src="libraries/bootstrap/js/bootstrap.min.js"></script>
 
@@ -155,7 +154,6 @@ function checkFinish(){
 		
 		initiateMatch()
 		window.location.replace("scrabble/scrabbleGame.php");
-		}
 	}
 }
 
@@ -276,9 +274,9 @@ function cancel(){
 	window.location.replace("home.php");
 }
 
-$(document).ready(function(){
+
 init()
-});
+
 
 </script>
 

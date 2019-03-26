@@ -16,7 +16,7 @@ include("Function.php");
 $user = $_POST["user"];
 $pass = $_POST["password"];
 
-
+$_SESSION["user"] = $user;
 
 
 
@@ -49,7 +49,6 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 
 $_SESSION["login"] = $response["result"];
-$_SESSION["user"] = $user;
 #echo $response["message"];
 
 #print_r($response);

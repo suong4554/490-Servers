@@ -2,12 +2,12 @@
 //Wanted to note that SQL is called locally since this is basically used as a cache for only matchmaking. 
 //If we continuously call rabbitmq in a while loop to send and receive message, we end up "clogging" the queue causing it to freeze
 //Thus we call SQL locally by design choice, not because we did not know how to code this step
-//date_default_timezone_set("America/New_York");
-//session_set_cookie_params(0, "/var/www/html");
+date_default_timezone_set("America/New_York");
+session_set_cookie_params(0, "/var/www/html");
 session_start();
-//$_SESSION = array();
+$_SESSION = array();
 include("account.php");
-//include("scrabble/matchmaking/Function.php");
+include("scrabble/matchmaking/Function.php");
 
 
 error_reporting(E_ALL);
@@ -17,17 +17,12 @@ ini_set('display_errors',on);
 
 
 //testing
-<<<<<<< HEAD
 //$_SESSION["login"] = true;
-=======
-//$_SESSION["login"] = True;
->>>>>>> parent of f7ac664... integrated chat w/ Edwin
 //$_SESSION["user"]= "Bill";
 //print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
-/*
 $db = mysqli_connect($servername, $username, $password , $project);
 if (mysqli_connect_errno())
   {
@@ -38,27 +33,14 @@ if (mysqli_connect_errno())
   }
 
 mysqli_select_db( $db, $project );
-*/
 ###################################################################################################
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
 
-$client = new rabbitMQClient('MySQLRabbit.ini', 'MySQLRabbit');
-=======
-
->>>>>>> parent of c0765e0... rabbitmq compat
-=======
-
->>>>>>> parent of c0765e0... rabbitmq compat
 
 if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
-	//exit();
+	exit();
 }
 elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt")){
 	redirect("", "scrabble/scrabbleGame.php", 0);
@@ -66,31 +48,8 @@ elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt"))
 else{
 	$user = $_SESSION["user"];
 	//Puts player into sql table for matchmaking
-<<<<<<< HEAD
-<<<<<<< HEAD
-	
-	//Initiates search
-	$request = array();
-	$request['type'] = "initiateSearch";
-	$request['user1'] = $user;
-	$request["message"] = "ugh";
-	$response = $client->send_request($request);
-	
-	//Finds if someone else is looking for a match
-	sleep(1);
-	$request = array();
-	$request['type'] = "findMatch";
-	$request["message"] = "ugh";
-	$response = $client->send_request($request);
-	$peasant = $response["result"];
-=======
 	initiateSearch($user);
->>>>>>> parent of c0765e0... rabbitmq compat
-=======
-	initiateSearch($user);
->>>>>>> parent of c0765e0... rabbitmq compat
 	$peasant = findMatch();
-	//$peasant = true;
 	if(!$peasant){
 		print("false");
 	}
@@ -114,8 +73,8 @@ else{
 <header>
 <title>Scrabble Home</title>
 
-<script src="libraries/jquery-3.3.1.min.js"></script>
-
+<!--<script src="libraries/jquery-3.3.1.min.js"></script>-->
+<script src="libraries/jquery.js"></script>
 <script defer src="libraries/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
 <script src="libraries/bootstrap/js/bootstrap.min.js"></script>
@@ -192,8 +151,8 @@ function checkFinish(){
 	if(temp == true || temp2 == true){
 		clearInterval(interval);
 		$("#centerloader").removeClass("loader");
-		otherUser = getOtherUser()
-		console.log(otherUser)
+		otherUser = getOtherUser();
+		console.log(otherUser);
 		
 		initiateMatch()
 		window.location.replace("scrabble/scrabbleGame.php");
@@ -314,10 +273,14 @@ function cancel(){
 	});	
 	window.location.replace("home.php");
 }
-$(document).ready(function(){
+
+
 init()
-});
 
 </script>
+
+
+
+
 
 </html>
