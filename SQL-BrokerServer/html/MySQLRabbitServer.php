@@ -24,6 +24,27 @@ if (mysqli_connect_errno())
 
 mysqli_select_db( $db, $project );
 
+$logName = "RabbitReceived_Sent.txt";
+function rabbitLog($array, $filename){
+	if(file_exists($filename)){
+		$myfile = fopen($filename, "a");
+		$text = serialize($array);
+		$date = date('Y-m-d');
+		fwrite($myfile, $date);
+		fwrite($myfile, "\n");
+		fwrite($myfile, $text);
+		fwrite($myfile, "\n");
+	}
+	else{
+		$myfile = fopen($filename, "w");
+		$text = serialize($array);
+		$date = date('Y-m-d');
+		fwrite($myfile, $date);
+		fwrite($myfile, "\n");
+		fwrite($myfile, $text);
+		fwrite($myfile, "\n");
+	}
+}
 
 
 function wordCheck($request){
@@ -64,18 +85,16 @@ function requestProcessor($request){
 	  return $message;
 	 
   }
+  rabbitLog($request, $logName);
   $result = "";
   $temp = $request['type'];
-  if($temp == 'Login')
-  {
+  if($temp == 'Login'){
 	  $result = auth($request['username'],$request['password']);
   }
-
   else if ($temp == 'Registration'){
 	  $result = register($request['username'],$request['password'],$request['password2'],$request['email']);
 	  print($result);
   }
-  
    else if ($temp == 'recordGame'){
 	  $result = recordGame($request['user1'],$request['user2'],$request['winner'],$request['score1'],$request['score2'],$request['turns']);
 	  print($result);
@@ -158,7 +177,7 @@ function requestProcessor($request){
   }
 
   
-  
+  rabbitLog(array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result), $logName);
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);
   
 }
