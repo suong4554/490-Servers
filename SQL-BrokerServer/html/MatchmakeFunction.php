@@ -179,15 +179,4 @@ function cancelSearch($user1){
 	$t = mysqli_query ( $db , $s );
 }
 
-
-
-
-
-
-function redirect ($message, $url, $delay){
-	echo $message;
-	header("refresh: $delay; url = '$url'");
-	exit();
-}
-
 ?>

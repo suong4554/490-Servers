@@ -8,7 +8,7 @@ include('account.php');
 include('Function.php');
 include('MatchmakeFunction.php');
 
-include "chat.php";
+//include "chat.php";
 
 error_reporting(E_ALL);
 ini_set('display_errors',on);
@@ -82,7 +82,7 @@ function requestProcessor($request){
   }
    else if ($temp == 'showMatchHistory'){
 	  $result = [];
-	  $result = show($request['user'], $result);
+	  $result = show($request['username'], $result);
 	  print_r($result);
   }
   else if($temp == "checkWords"){
@@ -144,9 +144,6 @@ function requestProcessor($request){
    else if($temp == "cancelSearch"){
 	$result = cancelSearch($request['user1']);
 	print($result);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   } 
   else if($temp == "findInfo"){
 	  $result = findInfo($request['user1'], $request['info']);
@@ -159,15 +156,7 @@ function requestProcessor($request){
 	  $result = displayMsg($request['user'], $request['gameID']);
 	  print($result);
   }
-=======
-  }  
->>>>>>> parent of c0765e0... rabbitmq compat
-=======
-  }  
->>>>>>> parent of c0765e0... rabbitmq compat
-=======
-  }  
->>>>>>> parent of c0765e0... rabbitmq compat
+
   
   
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);
