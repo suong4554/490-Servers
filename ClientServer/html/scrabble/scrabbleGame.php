@@ -26,6 +26,7 @@ if (mysqli_connect_errno())
 //checks whether or not file exists to make sure that game was not quit intentionally or if a new game was started
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
 $newGame = "true";
+<<<<<<< HEAD
 
 
 
@@ -39,6 +40,8 @@ $client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
 
 
 
+=======
+>>>>>>> parent of c0765e0... rabbitmq compat
 if(file_exists($filename)){
 	$newGame = "false";
 }
@@ -50,37 +53,13 @@ if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 }
 else{
 	$user = $_SESSION["user"];
-	//$gameID = findInfo($user, "Matchid");
-	
-	
-	//Gets game ID
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "Matchid";
-	$response = $client->send_request($request);
-	$gameID = $response["result"];
+	print($user);
+	$gameID = findInfo($user, "Matchid");
 	$_SESSION["gameID"] = $gameID;
 	
-	
-	//Gets turn priority
-	//$turnPriority = !boolval(findInfo($user, "currentTurn"));
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "currentTurn";
-	$response = $client->send_request($request);
-	$turnPriority = !boolval($response["result"]);
-	
-
-	//Gets turn
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "turn";
-	$response = $client->send_request($request);
-	$turnPriority = $response["result"];
-	//$turn = findInfo($user, "turn");
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	print(json_encode($turnPriority));
+	$turn = findInfo($user, "turn");
 }
 
 
@@ -1097,9 +1076,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	
 	console.log(charactersUsed)
 	console.log(changedWords)
-	var wordExists = callWordsAPI(changedWords)
+	//var wordExists = callWordsAPI(changedWords)
 	//testing
-	//var wordExists = true
+	var wordExists = true
 	
 	console.log("word exists" + wordExists)
 	var adjacent = false

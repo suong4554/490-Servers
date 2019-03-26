@@ -38,11 +38,13 @@ mysqli_select_db( $db, $project );
 ###################################################################################################
 
 
+<<<<<<< HEAD
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+=======
+>>>>>>> parent of c0765e0... rabbitmq compat
 
-$client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
 
 if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
@@ -54,6 +56,7 @@ elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt"))
 else{
 	$user = $_SESSION["user"];
 	//Puts player into sql table for matchmaking
+<<<<<<< HEAD
 	
 	//Initiates search
 	$user = $_POST['user1'];
@@ -68,6 +71,10 @@ else{
 	$response = $client->send_request($request);
 	$peasant = $response["result"];
 	//$peasant = findMatch();
+=======
+	initiateSearch($user);
+	$peasant = findMatch();
+>>>>>>> parent of c0765e0... rabbitmq compat
 	if(!$peasant){
 		print("false");
 	}
