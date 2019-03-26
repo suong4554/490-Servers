@@ -17,8 +17,8 @@ ini_set('display_errors',on);
 
 
 //testing
-//$_SESSION["login"] = True;
-//$_SESSION["user"]= "Bill";
+$_SESSION["login"] = true;
+$_SESSION["user"]= "Bill";
 //print($_SESSION["user"]);
 
 
@@ -73,8 +73,8 @@ else{
 <header>
 <title>Scrabble Home</title>
 
-<script src="libraries/jquery-3.3.1.min.js"></script>
-
+<!--<script src="libraries/jquery-3.3.1.min.js"></script>-->
+<script src="libraries/jquery.js"></script>
 <script defer src="libraries/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
 <script src="libraries/bootstrap/js/bootstrap.min.js"></script>
@@ -151,8 +151,8 @@ function checkFinish(){
 	if(temp == true || temp2 == true){
 		clearInterval(interval);
 		$("#centerloader").removeClass("loader");
-		otherUser = getOtherUser()
-		console.log(otherUser)
+		otherUser = getOtherUser();
+		console.log(otherUser);
 		
 		initiateMatch()
 		window.location.replace("scrabble/scrabbleGame.php");
@@ -273,9 +273,9 @@ function cancel(){
 	});	
 	window.location.replace("home.php");
 }
-$(document).ready(function(){
+
+
 init()
-});
 
 </script>
 

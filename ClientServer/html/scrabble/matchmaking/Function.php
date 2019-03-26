@@ -160,6 +160,8 @@ function endMatch($user1, $user2){
 	$s = "DELETE FROM matches WHERE Username = '$user2'";
 	$t = mysqli_query ( $db , $s );
 	
+	$s = "DELETE FROM chats WHERE ChatUsername = '$user1' OR ChatUsername = '$user2'";
+	$t = mysqli_query ( $db , $s );
 }
 
 function updateScore($user1, $score){
@@ -178,7 +180,6 @@ function cancelSearch($user1){
 	$s = "DELETE FROM matches WHERE Username = '$user1'";
 	$t = mysqli_query ( $db , $s );
 }
-
 
 
 
