@@ -145,6 +145,7 @@ function requestProcessor($request){
 	$result = cancelSearch($request['user1']);
 	print($result);
 <<<<<<< HEAD
+<<<<<<< HEAD
   } 
   else if($temp == "findInfo"){
 	  $result = findInfo($request['user1'], $request['info']);
@@ -157,6 +158,9 @@ function requestProcessor($request){
 	  $result = displayMsg($request['user'], $request['gameID']);
 	  print($result);
   }
+=======
+  }  
+>>>>>>> parent of c0765e0... rabbitmq compat
 =======
   }  
 >>>>>>> parent of c0765e0... rabbitmq compat
