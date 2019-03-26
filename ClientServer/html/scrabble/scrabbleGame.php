@@ -27,15 +27,15 @@ if (mysqli_connect_errno())
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
 $newGame = "true";
 
+/*
 
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
 
-require_once('../../path.inc');
-require_once('../../get_host_info.inc');
-require_once('../../rabbitMQLib.inc');
+$client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
 
-$client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
-
-
+*/
 
 
 
@@ -50,9 +50,9 @@ if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 }
 else{
 	$user = $_SESSION["user"];
-	//$gameID = findInfo($user, "Matchid");
-	
-	
+	$gameID = findInfo($user, "Matchid");
+	$_SESSION["gameID"] = $gameID;
+	/*
 	//Gets game ID
 	$request = array();
 	$request['type'] = "findInfo";
@@ -61,18 +61,21 @@ else{
 	$response = $client->send_request($request);
 	$gameID = $response["result"];
 	$_SESSION["gameID"] = $gameID;
-	
-	
+	*/
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	/*
 	//Gets turn priority
-	//$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
 	$request = array();
 	$request['type'] = "findInfo";
 	$request['user1'] = $user;
 	$request['info'] = "currentTurn";
 	$response = $client->send_request($request);
 	$turnPriority = !boolval($response["result"]);
-	
-
+	*/
+	$turn = findInfo($user, "turn");
+	$_SESSION["turn"] = $turn;
+	/*
 	//Gets turn
 	$request = array();
 	$request['type'] = "findInfo";
@@ -81,6 +84,7 @@ else{
 	$response = $client->send_request($request);
 	$turnPriority = $response["result"];
 	//$turn = findInfo($user, "turn");
+	*/
 }
 
 
@@ -218,6 +222,24 @@ function checkFinish(){
 	if(temp == false){
 		clearInterval(interval);
 		alert(user2 + " has ended or Quit the Game, you will be shortly redirected, to check match-history, click the show Match History Button on the home page")
+		
+		filename = "gameState/" + user + "gameState.txt"
+		$.ajax({
+			type:'POST',
+			async: false,
+			url: "deleteFile.php",
+			data: {filename1: filename},
+			dataType: "json"
+			
+		})
+		.done(function(msg){
+			console.log("succefully deleted file");
+			//console.log(msg);
+		})
+		.fail(function(msg){
+			console.log("failed to delete file");
+			console.log(msg);
+		});
 		location.replace("../home.php")
 	}
 }
@@ -1223,7 +1245,10 @@ function endGame(){
 	//var score2 = 0
 	//var user2 = "Joel"
 	var winner = "user"
-	if(score > score2){
+	if(score == score2){
+		winner = user + " " + user2 + " (a Tie)"
+	}
+	else if(score > score2){
 		winner = user
 	}
 	else{
