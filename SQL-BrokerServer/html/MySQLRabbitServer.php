@@ -124,7 +124,11 @@ function requestProcessor($request){
    else if($temp == "cancelSearch"){
 	$result = cancelSearch($request['user1']);
 	print($result);
-  }  
+  } 
+  else if($temp == "findInfo"){
+	  $result = findInfo($request['user1'], $request['info']);
+	  print($result);
+  }
   
   
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);

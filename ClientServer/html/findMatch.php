@@ -36,7 +36,11 @@ mysqli_select_db( $db, $project );
 ###################################################################################################
 
 
+require_once('../../path.inc');
+require_once('../../get_host_info.inc');
+require_once('../../rabbitMQLib.inc');
 
+$client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
 
 if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 	redirect("", "index.php", 0);
@@ -48,7 +52,21 @@ elseif(file_exists("scrabble/gameState/" . $_SESSION["user"] . "gameState.txt"))
 else{
 	$user = $_SESSION["user"];
 	//Puts player into sql table for matchmaking
-	initiateSearch($user);
+	
+	//Initiates search
+	$user = $_POST['user1'];
+	$request = array();
+	$request['type'] = "initiateSearch";
+	$request['user1'] = $user;
+	$response = $client->send_request($request);
+	
+	//Finds if someone else is looking for a match
+	$request = array();
+	$request['type'] = "findMatch";
+	$response = $client->send_request($request);
+	$temp = $response["result"];
+	print(json_encode($temp));
+	
 	$peasant = findMatch();
 	if(!$peasant){
 		print("false");
