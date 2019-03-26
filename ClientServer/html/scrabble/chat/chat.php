@@ -58,10 +58,9 @@ class chat
 			while($rowChat = mysqli_fetch_assoc($t))
 			{
 				if($rowChat["ChatGameId"] == $ChatGameId) 
-				{?>
-					<span class="UserNameS"><?php echo $rowChat['ChatUsername'];?></span> says:
-					<span class="ChatMessageS"><?php echo $rowChat['ChatText'];?></span></br>
-					<?php
+				{
+					$tempStr = "<span class='UserNameS'> $rowChat['ChatUsername'] </span> says: <span class='ChatMessageS'>$rowChat['ChatText']</span></br>";
+					return $tempStr;
 				}
 			}
 		}

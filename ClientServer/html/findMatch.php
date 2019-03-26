@@ -17,12 +17,13 @@ ini_set('display_errors',on);
 
 
 //testing
-$_SESSION["login"] = true;
-$_SESSION["user"]= "Bill";
+//$_SESSION["login"] = true;
+//$_SESSION["user"]= "Bill";
 //print($_SESSION["user"]);
 
 
 #################################Initiates Connection to SQL SERVER################################
+/*
 $db = mysqli_connect($servername, $username, $password , $project);
 if (mysqli_connect_errno())
   {
@@ -33,12 +34,13 @@ if (mysqli_connect_errno())
   }
 
 mysqli_select_db( $db, $project );
+*/
 ###################################################################################################
 
 
-require_once('../../path.inc');
-require_once('../../get_host_info.inc');
-require_once('../../rabbitMQLib.inc');
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
 $client = new rabbitMQClient('../../MySQLRabbit.ini', 'MySQLRabbit');
 
@@ -64,10 +66,8 @@ else{
 	$request = array();
 	$request['type'] = "findMatch";
 	$response = $client->send_request($request);
-	$temp = $response["result"];
-	print(json_encode($temp));
-	
-	$peasant = findMatch();
+	$peasant = $response["result"];
+	//$peasant = findMatch();
 	if(!$peasant){
 		print("false");
 	}
@@ -296,9 +296,5 @@ function cancel(){
 init()
 
 </script>
-
-
-
-
 
 </html>

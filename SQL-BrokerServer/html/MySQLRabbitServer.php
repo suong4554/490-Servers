@@ -8,6 +8,8 @@ include('account.php');
 include('Function.php');
 include('MatchmakeFunction.php');
 
+include "chat.php";
+
 error_reporting(E_ALL);
 ini_set('display_errors',on);
 
@@ -32,6 +34,24 @@ function wordCheck($request){
     return $response;
 	
 }
+
+function insertChatMsg($user, $gameID, $text){
+	$chat = new chat();
+	$chat->setChatUsername($user);
+	$chat->setChatGameId($gameID);
+	$chat->setChatText($text);
+	$chat->InsertChatMessage();
+}
+
+
+function displayMsg($user, $gameID){
+	$chat = new chat();
+	$chat->setChatUsername($user);
+	$chat->setChatGameId($gameID);
+	$temp = $chat->DisplayMessage();
+	return $temp;
+}
+
 
 
 function requestProcessor($request){
@@ -127,6 +147,13 @@ function requestProcessor($request){
   } 
   else if($temp == "findInfo"){
 	  $result = findInfo($request['user1'], $request['info']);
+	  print($result);
+  }
+  else if($temp == "insertChatMsg"){
+	  $result = insertChatMsg($request['user'], $request['gameID'], $request['text']);
+  }
+  else if($temp == "displayMsg"){
+	  $result = displayMsg($request['user'], $request['gameID']);
 	  print($result);
   }
   
