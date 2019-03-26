@@ -7,7 +7,7 @@ Servers for 490 project
 Evidence of work can be seen through commits, Commits by Samuel Uong are normally the work of both Samuel Uong and Edwin Zhou working together. We have another repository where we tested the scrabble game itself before moving it to the 490 servers repository (https://github.com/suong4554/Scrabble-Service)
 
 
-##**Deliverable Requirements** (*All deliverable Requirements were completed*)  
+## **Deliverable Requirements** (*All deliverable Requirements were completed*)  
 Start a game with a random person that is also logged in for scrabble  
 Use API to validate all words to make sure it exists  
 Keep track of history of who you played, wins, losses, scores, etc.   
@@ -17,7 +17,7 @@ Resume Game State on disconnect
 
 
 
-##**Moving files over for testing**  
+## **Moving files over for testing**  
 For the Client/Web Server move the ClientServer/html folder into /var/www/html and also replace your apache2.conf with the apache2.conf in the ClientServer folder (Main difference is it calls index.php instead of index.html). Also using clintSQL.sql dump implement tables on the web server (this is explained later on).    
 For the DMZ Server simply move the folder over onto the DMZ server and install php-curl to have it work.  
 For the SQL-BrokerServer move the folder onto the Broker/SQL Server  and install the sql dump (scheme.sql).
@@ -30,14 +30,14 @@ Also note that the ip addresses have to match which are denoted in the .ini file
 
 
 
-##Quick Notes on Each Server:
+## Quick Notes on Each Server:
 
-#####**Client Server:**  
+##### **Client Server:**  
 Client Server is where the client connects and logs in.   
 From the login or registration page the user is sent to home.php which has the options to *Play Scrabble*, *View Match History*, and to *Logout*  
 
 
-#####Play Scrabble (Starting a game with a random person, using API to validate words, integrating a chat platform, Resuming game State on disconnect)   
+##### Play Scrabble (Starting a game with a random person, using API to validate words, integrating a chat platform, Resuming game State on disconnect)   
 If you select *Play Scrabble* you will be redirected to a finding match page which will have an option to *Cancel* the search at any time.  
 Once someone else logs in and starts looking for a match too you will automatically be redirected to the Scrabble Game itself and your match will start (It is important to note that only one player is allowed to play at once, so you will either be redirected to a scrabble board with some stats at the bottom or to another waiting page).
 There will be a chat that keeps the 15 most recent messages in the waiting and scrabble pages (The chat is unique per each game).  
@@ -46,12 +46,12 @@ If you decide to end the game/Declare the winner, the game will calculate the wi
 *These were choices made in order to emphasize not quitting in the middle of the game as the other player will be left waiting*  
 If your browser closes out mid game (**This will be important to test *resuming a game state on disconnect* **) when you log back in and click on *Play Scrabble* you will be sent back to the Scrabble Game you were currently in.  
   
-####View Match History  
+##### View Match History  
 This will simply view match history in the format of a table.  
 
 
 
-####*Testing*
+##### *Testing*
 In order to test two users logging in at once and playing a scrabble game together, I installed Chrome on my ubuntu instance(Firefox runs from a single .exe file so multiple private windows will share cookies) and ran a chrome and firefox window side by side to simulate multiple connections.
 For the scrabble game itself it saves gamestates to local files on the server and uses an SQL database that is on the server itself.
 The reason for using a local SQL database was that the way I performed matchmaking was through putting a call to an SQL database to check for updates. I'm sure this isn't the most efficient way to do things but it's what I came up with for this project and it worked.  
@@ -66,7 +66,7 @@ Checking the words API works with RabbitMQ and calls the Broker which then calls
 	 
 
 
-#####**DMZ Server:**  
+##### **DMZ Server:**  
 This server just takes in a request and checks it against the words API. 
 *You will need to install php-curl in order for it to properly work.*
 Each request to this server is an array of words, if a single one of the words is wrong it will return false signifying that the pieces the player put down are invalid.
@@ -75,7 +75,7 @@ Each request to this server is an array of words, if a single one of the words i
 	 
 
 
-#####**SQL/Broker Server:**  
+##### **SQL/Broker Server:**  
 This server acts as both the SQL and Broker since we are currently one computer short due to a member being in the hospital.
 This server will take in requests and forward it to the DMZ server or execute certain requests that call on SQL such as authentication/registration. 
 It is also configured to work with matchmaking but that is currently not used in order to prevent the server from hanging along with the error we posted in error.png. 
