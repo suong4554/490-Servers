@@ -9,20 +9,30 @@ Evidence of work can be seen through commits, Commits by Samuel Uong are normall
 
 ## **Deliverable Requirements** (*All deliverable Requirements were completed*)  
 Start a game with a random person that is also logged in for scrabble  
+  
 Use API to validate all words to make sure it exists  
+  
 Keep track of history of who you played, wins, losses, scores, etc.   
+  
 Integrate a chat platform  
+  
 Resume Game State on disconnect  
+  
 *SQL and Broker are the same server since one of our members is currently in the hospital*  
 
 
 
 ## **Moving files over for testing**  
 For the Client/Web Server move the ClientServer/html folder into /var/www/html and also replace your apache2.conf with the apache2.conf in the ClientServer folder (Main difference is it calls index.php instead of index.html). Also using clintSQL.sql dump implement tables on the web server (this is explained later on).    
+  
 For the DMZ Server simply move the folder over onto the DMZ server and install php-curl to have it work.  
+  
 For the SQL-BrokerServer move the folder onto the Broker/SQL Server  and install the sql dump (scheme.sql).
+  
 For all servers esnure that RabbitMQ and AMQP are installed along with PHP 7.
+  
 Create RabbitMQ queues according to the .ini files for each server (DMZ.ini for the DMZ server and MYSQLRabbitServer.ini for the Broker/SQL server)  
+  
 Also note that the ip addresses have to match which are denoted in the .ini files (192.168.10 for Broker and 192.168.7 for DMZ)
  
 
