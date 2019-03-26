@@ -76,6 +76,7 @@ function displayMsg($user, $gameID){
 
 
 function requestProcessor($request){
+$logName = "RabbitReceived_Sent.txt";
   echo "received request".PHP_EOL;
   var_dump($request);
   if(!isset($request['type']))

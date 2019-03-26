@@ -32,6 +32,29 @@ function doRegistration($username, $password, $password2, $email){
 
 }
 
+
+
+function rabbitLog($array, $filename){
+	if(file_exists($filename)){
+		$myfile = fopen($filename, "a");
+		$text = serialize($array);
+		$date = date('Y-m-d');
+		fwrite($myfile, $date);
+		fwrite($myfile, "\n");
+		fwrite($myfile, $text);
+		fwrite($myfile, "\n");
+	}
+	else{
+		$myfile = fopen($filename, "w");
+		$text = serialize($array);
+		$date = date('Y-m-d');
+		fwrite($myfile, $date);
+		fwrite($myfile, "\n");
+		fwrite($myfile, $text);
+		fwrite($myfile, "\n");
+	}
+}
+
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;

@@ -6,7 +6,7 @@ require_once('rabbitMQLib.inc');
 
 include("wordCheck/wordcheck.php");
 
-$logName = "RabbitReceived_Sent.txt";
+
 function rabbitLog($array, $filename){
 	if(file_exists($filename)){
 		$myfile = fopen($filename, "a");
@@ -31,6 +31,7 @@ function rabbitLog($array, $filename){
 
 
 function requestProcessor($request){
+	$logName = "RabbitReceived_Sent.txt";
 	echo "received request".PHP_EOL;
 	var_dump($request);
 	if(!isset($request['type'])){
