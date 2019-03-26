@@ -22,6 +22,11 @@ if (mysqli_connect_errno())
 #$_SESSION["gameID"] = 1;
 
 
+if(!$_SESSION["login"]){
+	redirect("", "../index.php", 0);
+	exit;
+}
+
 
 //checks whether or not file exists to make sure that game was not quit intentionally or if a new game was started
 $filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
@@ -50,9 +55,8 @@ if(file_exists($filename)){
 }
 
 
-if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
+if(!isset($_SESSION["login"])){
    $_SESSION["login"] = False;
-   redirect("", "../index.php", 0);
 }
 else{
 	$user = $_SESSION["user"];
@@ -111,9 +115,6 @@ else{
 	$turn = findInfo($user, "turn");
 >>>>>>> parent of c0765e0... rabbitmq compat
 }
-
-
-
 
 
 
@@ -212,34 +213,33 @@ else{
 
 </style>
 <body onload="init()">
-	<button type="button" id="clearCookies" onClick="logOut()">log out/Quit Game</button>
-	<br>
-	<button type="button" id="endGameRedirect" onClick="endGame()">End Game/Declare Winner</button>
-	<br>
-	<div id="ScrabbleContainer"></div>
+<button type="button" id="clearCookies" onClick="logOut()">log out/Quit Game</button>
+<br>
+<button type="button" id="endGameRedirect" onClick="endGame()">End Game/Declare Winner</button>
+<br>
+<div id="ScrabbleContainer">
 
-	<button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
-	<button type="button" id="pass" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
-	<br>
-	<label>User:</label><input type="text" id="user" readonly></input>
-	<label>Opponent:</label><input type="text" id="user2" readonly></input>
-	<br>
-	<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
-	<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
-	<br>
-	<label>Turn:</label><input type="text" id="turnCount" readonly></input>
-	<br>
 
-	<div id="pieceContainer"></div>
-	<div id="ChatMessages"></div>
-	<div id="ChatBig"> 
-		<span style="color:green">Chat</span><br/>
-		<textarea id="ChatText" name="ChatText"></textarea>
-	</div>
+</div>
 
+<button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
+<button type="button" id="pass" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
+<br>
+<label>User:</label><input type="text" id="user" readonly></input>
+<label>Opponent:</label><input type="text" id="user2" readonly></input>
+<br>
+<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
+<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
+<br>
+<label>Turn:</label><input type="text" id="turnCount" readonly></input>
+<br>
+
+<div id="pieceContainer">
+
+</div>
 </body>
 
-<script src="chat/jquery.js"></script>
+
 <script>
 function checkFinish(){
 	temp = checkGameState()
@@ -1126,9 +1126,9 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 	
 	console.log(charactersUsed)
 	console.log(changedWords)
-	//var wordExists = callWordsAPI(changedWords)
+	var wordExists = callWordsAPI(changedWords)
 	//testing
-	var wordExists = true
+	//var wordExists = true
 	
 	console.log("word exists" + wordExists)
 	var adjacent = false
@@ -1286,36 +1286,7 @@ function endGame(){
 	
 }
 	
-$(document).ready(function() {
-	$("#ChatText").keyup(function(e){
-			if(e.keyCode == 13) {
-					
-				var ChatText = $("#ChatText").val();
-				$.ajax({
-					type:'POST',
-					url:'chat/insertMessage.php',
-					data:{ChatText:ChatText},
-					success:function()
-					{
-						$("#ChatText").val("");
-					
-					},
-					fail:function()
-					{
-					alert('request failed');
-					}
 
-				})
-			}
-	})
-	
-	setInterval(function(){
-			$("#ChatMessages").load("chat/DisplayMessages.php");
-	},1500)
-	
-	$("#ChatMessages").load("chat/DisplayMessages.php");
-	
-});
 
 
 </script>

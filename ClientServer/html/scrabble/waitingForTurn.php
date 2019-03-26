@@ -104,11 +104,6 @@ else{
 		</div>
 	</div>
 </div>
-<div id="ChatMessages"></div>
-	<div id="ChatBig"> 
-		<span style="color:green">Chat</span><br/>
-		<textarea id="ChatText" name="ChatText"></textarea>
-	</div>
 
 </body>
 
@@ -160,41 +155,8 @@ function checkTurnPriority(){
 $(document).ready(function(){
 init()
 });
-$(document).ready(function() {
-	$("#ChatText").keyup(function(e){
-			if(e.keyCode == 13) {
-					
-				var ChatText = $("#ChatText").val();
-				$.ajax({
-					type:'POST',
-					url:'chat/insertMessage.php',
-					data:{ChatText:ChatText},
-					success:function()
-					{
-						$("#ChatText").val("");
-					
-					},
-					fail:function()
-					{
-					alert('request failed');
-					}
-
-				})
-			}
-	})
-	
-	setInterval(function(){
-			$("#ChatMessages").load("chat/DisplayMessages.php");
-	},1500)
-	
-	$("#ChatMessages").load("chat/DisplayMessages.php");
-	
-});
-
 
 </script>
-
-
 
 
 
