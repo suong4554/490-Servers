@@ -2,10 +2,10 @@
 //Wanted to note that SQL is called locally since this is basically used as a cache for only matchmaking. 
 //If we continuously call rabbitmq in a while loop to send and receive message, we end up "clogging" the queue causing it to freeze
 //Thus we call SQL locally by design choice, not because we did not know how to code this step
-date_default_timezone_set("America/New_York");
-session_set_cookie_params(0, "/var/www/html");
+//date_default_timezone_set("America/New_York");
+//session_set_cookie_params(0, "/var/www/html");
 session_start();
-$_SESSION = array();
+//$_SESSION = array();
 include("account.php");
 include("scrabble/matchmaking/Function.php");
 
