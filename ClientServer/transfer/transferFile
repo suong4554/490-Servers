@@ -1,0 +1,15 @@
+cp -R /var/www/html /home/sfu5/transfer/ClientServer
+
+tar -czvf ClientServer.tar.gz /home/sfu5/transfer/ClientServer
+
+
+sshpass -p "njit"  ssh root@192.168.1.1 'mkdir /home/transfer/'
+
+sshpass -p 'njit' ssh root@192.168.1.1 'mkdir /home/transfer/servers'
+
+
+
+
+sshpass -p 'njit' scp /home/sfu5/transfer/ClientServer.tar.gz root@192.168.1.1:/home/transfer/servers
+
+
