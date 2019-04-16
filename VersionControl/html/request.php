@@ -70,6 +70,21 @@ function checkVersion($logVersion){
 }
 
 
+function getVersionLocation($logVersion, $version){
+	$myfile = fopen($logVersion, "r");
+	$contents = fread($myfile, filesize($logVersion));
+	$versionArr = json_decode($contents);
+	foreach($versionArr as $versionData){
+		$versionData=(array)$versionData;
+		if($versionData["version"] == $version){
+			return($versionData["location"]);
+		}
+	}
+	#defaults to current if version is not found
+	echo ($versionArr[0]["location"]);
+	return($versionArr[0]["location"]);
+}
+
 
 if(isset($argv[2])){
 	$version = $argv[2];
@@ -88,6 +103,8 @@ if($command == "getDev"){
 	$request['type'] = "toControl";
 	$request['version'] = $version;
 	$request['message'] = $msg;
+	
+	#sends request
 	$response = $client->send_request($request);
 	print("Pull Finished");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
@@ -99,10 +116,16 @@ if($command == "getDev"){
 elseif($command == "toDev"){
 	$client = new rabbitMQClient('Dev.ini', 'MySQLRabbit');
 	$msg = "I want to insert myself into you";
+	$location = getVersionLocation($logVersion, $version);
 	$request = array();
 	$request['type'] = "fromControl";
-	$request['version'] = $version;
+	$request['versionFile'] = $version . ".tar.gz";
+	$request['location'] = $location;
 	$request['message'] = $msg;
+	
+	#sends request
+	$response = $client->send_request($request);
+	print("Dev has successfully rolled back to " . $version);
 	#when dev broker retrieves this it will connect to service server
 	#will then transfer files to itself and extract files
 }

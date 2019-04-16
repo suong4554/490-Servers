@@ -14,13 +14,14 @@ mkdir ${transferDir}/${server}/html
 
 
 #Copies to local directory
-cp -R ${packageLocation} ${transferDir}/${server}/html
+cp -R ${packageLocation}/* ${transferDir}/${server}/html
 
 #Creates dump of SQL
 mysqldump -u sfu5 -p${rootPass} userAccounts > ${transferDir}/${server}/dump.sql
 
 #Zips file
-tar -czvf ${transferDir}/servers/${server}.tar.gz ${transferDir}/${server}
+cd ${transferDir}
+tar -czvf ${transferDir}/servers/${server}.tar.gz ${server}
 
 #removes temporary copy
 rm -rf ${transferDir}/${server}
@@ -35,7 +36,8 @@ sshpass -p $rootPass ssh root@${dmz} 'bash '${transferDir}'/scripts/transferFile
 
 echo "creating tar of all servers"
 #Creating Tar of servers
-tar -czvf ${transferDir}/servers.tar.gz ${transferDir}/servers
+cd ${transferDir}
+tar -czvf ${transferDir}/servers.tar.gz servers
 
 
 echo "Transfering files to $control"

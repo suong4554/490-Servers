@@ -12,13 +12,14 @@ mkdir ${transferDir}/${server}/html
 
 
 #Copies to local directory
-cp -R ${packageLocation} ${transferDir}/${server}/html
+cp -R ${packageLocation}/* ${transferDir}/${server}/html
 
 #Creates dump of SQL
 #mysqldump -u sfu5 -p${rootPass} matches > ${transferDir}/${server}/dump.sql
 
 #Zips file
-tar -czvf ${transferDir}/${server}.tar.gz ${transferDir}/${server}
+cd ${transferDir}
+tar -czvf ${transferDir}/${server}.tar.gz ${server}
 
 #removes temporary copy
 rm -rf ${transferDir}/${server}

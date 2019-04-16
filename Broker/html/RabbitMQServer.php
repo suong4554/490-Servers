@@ -96,10 +96,19 @@ $logName = "RabbitReceived_Sent.txt";
 	$result = shell_exec($cmd);
 	print($result);
   }
-
+  else if($temp == "fromControl"){
+	$version = $request['versionFile'];
+	$location = $request['location'];
+	
+	$cmd = "bash /home/transfer/scripts/initiateRetrieval.txt " . $location . " " . $version . "  > /dev/null &";
+	$result = shell_exec($cmd);
+	$result = "rollback acknowledged";
+	print($result);
+  }
   
   rabbitLog(array("returnCode" => '0', 'message'=>'Server acknowledged', 'result' => $result), $logName);
   return array("returnCode" => '0', 'message'=> "Server received request and processed", 'result' => $result);
+  #needs to be after as it also reinstall rabbitmq
   
 }
 
