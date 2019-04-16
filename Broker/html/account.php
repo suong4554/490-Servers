@@ -2,9 +2,9 @@
 
 $servername = "localhost";
 #$username = "edwinzhou";
-$username = "root";
-$password = "root";
-$project = "testdb";
+$username = "sfu5";
+$password = "njit";
+$project = "userAccounts";
 
 
 
