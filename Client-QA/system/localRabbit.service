@@ -1,0 +1,24 @@
+[Unit]
+#First install apt-get install memcached
+Description=Local Instance of RabbitMQ
+#May your script needs MySQL or other services to run, eg. MySQL Memcached
+Requires=rabbitmq-server.service memcached.service 
+After=rabbitmq-server.service memcached.service
+
+[Service]
+User=root
+Type=simple
+TimeoutSec=0
+PIDFile=/var/run/localRabbit.pid
+ExecStart=/usr/bin/php -f /var/www/html/RabbitMQServer.php
+#ExecStop=/bin/kill -HUP $MAINPID #It's the default you can change whats happens on stop command
+#ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+Restart=on-failure
+RestartSec=42s
+
+StandardOutput=null #If you don't want to make toms of logs you can set it null if you sent a file or some other options it will send all php output to this one.
+StandardError=/var/log/myphpdaemon.log
+[Install]
+WantedBy=default.target

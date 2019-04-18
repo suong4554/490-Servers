@@ -1,0 +1,36 @@
+#!/bin/bash
+#Make sure root password is set
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source ${DIR}/config.txt
+server="DMZServer"
+
+#Ensure directories exist before executing commands and clears folder if previously existed
+mkdir ${transferDir}/
+rm -rf ${transferDir}/${server}
+mkdir ${transferDir}/${server}
+mkdir ${transferDir}/${server}/html
+
+
+#Copies to local directory
+cp -R ${packageLocation}/* ${transferDir}/${server}/html
+
+#Creates dump of SQL
+#mysqldump -u sfu5 -p${rootPass} matches > ${transferDir}/${server}/dump.sql
+
+#Zips file
+cd ${transferDir}
+tar -czvf ${transferDir}/${server}.tar.gz ${server}
+
+#removes temporary copy
+rm -rf ${transferDir}/${server}
+
+#Ensures Destination exists
+sshpass -p $rootPass ssh root@${broker} 'mkdir '${transferDir}
+sshpass -p $rootPass ssh root@${broker} 'mkdir '${transferDir}'/servers'
+sshpass -p $rootPass ssh root@${broker} 'rm -rf '${transferDir}'/servers/${server}.tar.gz'
+
+
+echo "Transfering files to $broker"
+sshpass -p $rootPass scp  ${transferDir}/${server}.tar.gz root@${broker}:${transferDir}'/servers'
+
+

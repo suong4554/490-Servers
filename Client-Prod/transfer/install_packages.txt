@@ -1,0 +1,12 @@
+sshpass -p 'njit' ssh root@192.168.1.1 "pkill -f apt"
+
+sshpass -p 'njit' ssh root@192.168.1.1 "m /var/lib/apt/lists/lock"
+sshpass -p 'njit' ssh root@192.168.1.1 "rm /var/cache/apt/archives/lock"
+
+
+sshpass -p 'njit' ssh root@192.168.1.1 "apt-get update --yes"
+
+sshpass -p 'njit' ssh root@192.168.1.1 "apt-get upgrade --yes"
+
+sshpass -p 'njit' ssh root@192.168.1.1 "apt-get install php --yes"
+sshpass -p 'njit' ssh root@192.168.1.1 "apt-get install mysql-server"

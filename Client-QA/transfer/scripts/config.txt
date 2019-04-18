@@ -1,0 +1,9 @@
+broker=192.168.1.30
+client=192.168.1.22
+dmz=192.168.1.27
+control=192.168.1.50
+
+transferDir="/home/transfer"
+
+rootPass="njit"
+packageLocation="/var/www/html"
