@@ -7,33 +7,63 @@ Servers for 490 project
 Evidence of work can be seen through commits, Commits by Samuel Uong are normally the work of both Samuel Uong and Edwin Zhou working together. We have another repository where we tested the scrabble game itself before moving it to the 490 servers repository (https://github.com/suong4554/Scrabble-Service)
 
 
-## **Deliverable Requirements** (*All deliverable Requirements were completed*)  
-Start a game with a random person that is also logged in for scrabble  
+## **Server IP Configuration**  
+##### **Dev Instances:**    
+192.168.1.10 - Dev Broker  
+192.168.1.7 - Dev DMZ   
+192.168.1.2 - Dev Client  
   
-Use API to validate all words to make sure it exists  
+##### **QA Instances:**  
+192.168.1.30 - QA Broker
+192.168.1.27 - QA DMZ
+192.168.1.22 - QA Client
   
-Keep track of history of who you played, wins, losses, scores, etc.   
-  
-Integrate a chat platform  
-  
-Resume Game State on disconnect  
-  
-*SQL and Broker are the same server since one of our members is currently in the hospital*  
+##### **Prod Instances:**  
+192.168.1.20 - Prod Broker
+192.168.1.19 - Prod Broker-FailsafeSQL
+192.168.1.17 - Prod DMZ
+192.168.1.12 - Prod Client
+192.168.1.13 - Prod Client-FailsafeSQL
 
+##### **Version Control:**
+192.168.1.50 - Version Control  
+  
+  
 
+## **Packages to Install (Commands are given) **  
+##### **Upgrade**    
+sudo apt-get update  
+sudo apt-get upgrade   
+   
+##### **Essentials**    
+sudo apt-get install php  
+sudo apt-get install php-curl  
+sudo apt-get install mysql-server  
+sudo apt-get install rabbitmq-server  
 
-## **Moving files over for testing**  
-For the Client/Web Server move the ClientServer/html folder into /var/www/html and also replace your apache2.conf with the apache2.conf in the ClientServer folder (Main difference is it calls index.php instead of index.html). Also using clientSQL.sql dump implement tables on the web server (this is explained later on).    
+##### **System Service**    
+sudo apt-get install memcached  
+
+##### **System Version Control**    
+sudo apt-get install oppenssh-server openssh-client 
+sudo apt-get install sshpass  
+
   
-For the DMZ Server, simply move the folder over onto the DMZ server and install php-curl to have it work.  
   
-For the SQL-BrokerServer move the folder onto the Broker/SQL Server and install the sql dump (scheme.sql).
   
-For all servers esnure that RabbitMQ and AMQP are installed along with PHP 7.
+## **Setting up servers**  
+For all servers the *transfer* directory will be moved to *home/transfer* and the *html* directory will be moved to */var/www/html*  
+This can be done manually or you can execute the *move.txt* file by using *bash move.txt* once each directory is downloaded into their respective machines.
+It is assumed that dependencies are already installed and that each server has their respective IP addresses installed.  
   
-Create RabbitMQ queues according to the .ini files for each server (DMZ.ini for the DMZ server and MySQLRabbitServer.ini for the Broker/SQL server)  
   
-Also note that the ip addresses have to match which are denoted in the .ini files (192.168.1.10 for Broker and 192.168.1.7 for DMZ)
+## **Setting up version control**  
+In order for version control to work ssh must be allowed to run to the IP addresses that each server needs to connect to.  
+The command to do this is to run *ssh root@<Insert IP address of host>* and enter *yes* for the prompt that pops up then disconnect by using *ctrl d*.
+So the Broker of each environment needs to be able to access the Client, Version Control, and DMZ servers.
+The Client needs to access the Broker.
+The DMZ needs to access the Broker.
+The Version Control server needs to have access to the three Brokers for each environment (Broker-Dev, Broker-QA, Broker-Prod)  
  
 
 
@@ -86,7 +116,7 @@ Each request to this server is an array of words, if a single one of the words i
 
 
 ##### **SQL/Broker Server:**  
-This server acts as both the SQL and Broker since we are currently one computer short due to a member being in the hospital.
+This server acts as both the SQL and Broker.  
 This server will take in requests and forward it to the DMZ server or execute certain requests that call on SQL such as authentication/registration. 
 It is also configured to work with matchmaking but that is currently not used in order to prevent the server from hanging along with the error we posted in error.png. 
 

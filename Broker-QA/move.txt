@@ -1,15 +1,17 @@
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 rm -rf /var/www/html/
 mkdir /var/www/html
 
 rm -rf /home/transfer/
 mkdir /home/transfer
 
-for file in transfer/scripts/*; do
+for file in ${DIR}/transfer/scripts/*; do
 	sed -i 's/\r//g' ${file}
 done
 
-cp -R html/* /var/www/html/
-cp -R transfer/* /home/transfer
+cp -R ${DIR}/html/* /var/www/html/
+cp -R ${DIR}/transfer/* /home/transfer
 
 
 
