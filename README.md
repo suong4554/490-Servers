@@ -30,7 +30,7 @@ Evidence of work can be seen through commits, Commits by Samuel Uong are normall
   
   
 
-## **Packages to Install (Commands are given) **  
+## **Packages to Install (Commands are given)**  
 ##### **Upgrade**    
 sudo apt-get update  
 sudo apt-get upgrade   
