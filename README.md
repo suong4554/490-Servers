@@ -52,8 +52,8 @@ sudo apt-get install sshpass
   
   
 ## **Setting up servers**  
-For all servers the *transfer* directory will be moved to *home/transfer* and the *html* directory will be moved to */var/www/html*  
-This can be done manually or you can execute the *move.txt* file by using *bash move.txt* once each directory is downloaded into their respective machines.
+For all servers the "*transfer*" directory will be moved to "*home/transfer*" and the "*html*" directory will be moved to "*/var/www/html*"  
+This can be done manually or you can execute the "*move.txt*" file by using the command "*sudo bash move.txt*" (this executes the move.txt file) once each directory is downloaded into their respective machines.
 It is assumed that dependencies are already installed and that each server has their respective IP addresses installed.  
   
   
@@ -65,7 +65,9 @@ The Client needs to access the Broker.
 The DMZ needs to access the Broker.
 The Version Control server needs to have access to the three Brokers for each environment (Broker-Dev, Broker-QA, Broker-Prod)  
  
-
+## **Setting up RabbitMQ as a System Service**  
+For all servers the *system* directory will be have a file called *"localRabbit.service"*. This file will go into "*/etc/systemd/system*".
+After moving the file, run "*sudo systemctl daemon-reload*" then, "*sudo systemctl enable localRabbit*", this will start the system service on server start
 
 
 
