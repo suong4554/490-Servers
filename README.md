@@ -59,7 +59,7 @@ It is assumed that dependencies are already installed and that each server has t
   
 ## **Setting up version control**  
 In order for version control to work ssh must be allowed to run to the IP addresses that each server needs to connect to.  
-The command to do this is to run *ssh root@<Insert IP address of host>* and enter *yes* for the prompt that pops up then disconnect by using *ctrl d*.
+The command to do this is to run "*ssh root@InsertIPaddressOfHost*" and enter "*yes*" for the prompt that pops up then disconnect from the host by using "*ctrl d*".
 So the Broker of each environment needs to be able to access the Client, Version Control, and DMZ servers.
 The Client needs to access the Broker.
 The DMZ needs to access the Broker.
