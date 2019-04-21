@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang = "en">
+	<head>
+		<title>Registration Page</title>
+<script defer src="libraries/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="libraries/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<script src="libraries/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		
+		
+	</head>
+	<style>
+	#PasswordCheck{background: lightgray;}
+	
+	</style>
+	<body>
+		<br>
+		<div class="container">
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading" class="col-xs-1" align="center">
+						<h2>Register</h2>
+					</div>
+					
+					<nav aria-label="...">
+						<ul class="pager">
+							<li class="previous"><a href="index.php"><span aria-hidden="true">&larr;</span> Back to Login Page</a></li>
+						</ul>
+					</nav>
+
+					<div class="panel-body">
+						<form action="registrationAction.php" class="form-horizontal">
+
+							<fieldset id="fieldset" >
+								<br>
+
+					<div class="form-group">
+						<label for="user" class = "col-sm-4 control-label" >Username</label>
+						<div class="col-sm-5">
+							<input type=text class="form-control" name = "user" id="user" placeholder="Enter Username" required>
+						</div>
+					</div>
+
+						
+					<!--	
+						<div class="form-group">
+							<label for="user" class = "col-sm-4 control-label" >Fullname</label>
+							<div class="col-sm-5">
+								<input type=text class="form-control" name="fullname" id="fullname" placeholder="Enter Fullname" required>
+							</div>
+						</div>
+					-->	
+						<div class="form-group">
+						  <label for="user" class = "col-sm-4 control-label" >Email</label>
+							<div class="col-sm-5">
+							  <input type=text class="form-control" name="email" id="email" placeholder="Enter Email" required>
+							</div>
+						</div>
+						
+					<!--	<div class="form-group">
+							<label for="user" class = "col-sm-4 control-label" >Address</label>
+							<div class="col-sm-5">
+								<input type=text class="form-control" name="address" id="address" placeholder="Enter Address" required>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="user" class = "col-sm-4 control-label" >Cellphone</label>
+							<div class="col-sm-5">
+								<input type=text class="form-control" name="cell" id="cell" placeholder="Enter Cellphone Number" required>
+							</div>
+						</div>
+					-->	
+
+						<div class="form-group">
+						  <label for="password" class = "col-sm-4 control-label">Password</label>
+							<div class="col-sm-5">
+							  <input type="password" class="form-control" name = "password" id="password" placeholder="Enter Password" required onkeyup="checkPasswordMatch();">
+							</div>
+						</div>
+						<div class="form-group">
+						  <label for="password" class = "col-sm-4 control-label">Re-enter Password</label>
+							<div class="col-sm-5">
+							  <input type="password" class="form-control" name = "password2" id="password2" placeholder="Re-enter Password" required onkeyup="checkPasswordMatch();">
+							</div>
+						</div>
+										
+						<div class="form-group">
+						  <label for="registrationFormAlert" class = "col-sm-4 control-label">Password Check</label>
+								<div class="col-sm-5">
+									<div class="form-control" id="PasswordCheck">
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-5 col-sm-5">
+									<button type="submit" class="btn btn-default">Register</button>
+								</div>
+							</div>
+
+						</fieldset>
+					</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<script>
+	function checkPasswordMatch() {
+		var password = $("#password").val();
+		var confirmPassword = $("#password2").val();
+		ptr1 = document.getElementById("PasswordCheck");
+		ptr2 = document.getElementById("password");
+		ptr3 = document.getElementById("password2");	
+	
+		if (password != confirmPassword) {
+			$("#PasswordCheck").html("Passwords do not match!");
+			ptr1.style.borderColor = "red";
+			ptr2.style.borderColor = "red";
+			ptr3.style.borderColor = "red";
+		} 
+		else {
+			$("#PasswordCheck").html("Passwords match.");
+			ptr1.style.borderColor = "green";
+			ptr2.style.borderColor = "green";
+			ptr3.style.borderColor = "green";
+		}
+}
+</script>
