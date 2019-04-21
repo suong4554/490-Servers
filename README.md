@@ -55,6 +55,7 @@ sudo apt-get install sshpass
 For all servers the "*transfer*" directory will be moved to "*home/transfer*" and the "*html*" directory will be moved to "*/var/www/html*"  
 This can be done manually or you can execute the "*move.txt*" file by using the command "*sudo bash move.txt*" (this executes the move.txt file) once each directory is downloaded into their respective machines.
 It is assumed that dependencies are already installed and that each server has their respective IP addresses installed.  
+Both the Broker and Client server use MYSQL. It is important to create a table called "matches" in the Client server and "userAccounts" in the Broker server with the user "sfu5@localhost" with the password "njit"
   
   
 ## **Setting up version control**  
