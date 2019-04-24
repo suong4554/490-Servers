@@ -22,6 +22,7 @@ Evidence of work can be seen through commits, Commits by Samuel Uong are normall
 192.168.1.20 - Prod Broker
 192.168.1.19 - Prod Broker-FailsafeSQL
 192.168.1.17 - Prod DMZ
+192.168.1.16 - Prod DMZ-Failsafe
 192.168.1.12 - Prod Client
 192.168.1.13 - Prod Client-FailsafeSQL
 
