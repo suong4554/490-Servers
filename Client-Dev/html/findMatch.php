@@ -255,6 +255,7 @@ function initiateMatch(){
 			otherUser = result;
 		}
 	});	
+
 }
 
 

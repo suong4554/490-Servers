@@ -95,23 +95,110 @@ else{
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -20px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+#ScrabbleContainer{
+	min-width: 610px;
+	min-height: 610px;
+	z-index:100;
+}
+
+#ScrabbleBoard input{
+	width:40px;
+	height:40pxpx;
+	outline: 2px solid #808080;
+    font-family: arial;
+    font-size: 26px;
+    
+    letter-spacing: 6px;
+	text-transform:uppercase;
+}
+
+.normalText{
+	background-color: #F5F5DC;
+
+}
+.DWS{
+	background-color: #FFB6C1;
+}
+
+.TWS{
+	background-color: #CD5C5C;
+
+}
+.TLS{
+	background-color: #1E90FF;
+
+}
+.DLS{
+	background-color: #87CEFA;
+
+}
+
+#pieceContainer{
+	min-width: 300px;
+	min-height: 85px;
+	
+}
+
+#pieceContainer input{
+	width:40px;
+	height:40pxpx;
+	outline: 2px solid #808080;
+    font-family: arial;
+    font-size: 26px;
+    
+    letter-spacing: 6px;
+	text-transform:uppercase;    
+}
+
 </style>
 
 
-<body>
-<div id="Turn">
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">Waiting for Player to finish his turn</h5>
-			<p id="someText" class="card-text">There will eventually be a spinning circle here</p>
-
-				<div id="centerloader" class="loader"></div>
+<body onload="init()">
+	<div id="Turn">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Waiting for Player to finish his turn</h5>
+				<p id="someText" class="card-text">There will eventually be a spinning circle here</p>
+					<div id="centerloader" class="loader"></div>
+			</div>
 		</div>
 	</div>
-</div>
-<div id="ChatMessages"></div>
+	<br>
+	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
+
+	<div id="ScrabbleContainer"></div>
+	<div id="ChatMessages"></div>
 	<div id="ChatBig"> 
-		<span style="color:green">Chat</span><br/>
+		<span style="color:green">Chat</span><br>
 		<textarea id="ChatText" name="ChatText"></textarea>
 	</div>
 
@@ -119,15 +206,88 @@ else{
 
 <script>
 function init(){
-	//Should be a boolean so it will return true or false 
+	//Draws board
+	gameID = "<?php  print $gameID; ?>"
+	var result = fetchFile("python/" + gameID + "old.json")
+	board = result["board"]
+	htmlBoard = redrawBoard(board)
+	document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
 	
+	//Should be a boolean so it will return true or false 
 	user = "<?php print $user; ?>"
 	//InitiateSearch was executed in php segment of code
 	interval = setInterval(checkFinish, 1000)
+	setInterval(timeCheck, 999);
 	
 	
 }
+function timeCheck(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getTime", gameID:gameID},
+		beforeSend: function() {
+			console.log("Getting Time")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			timer = (result);
+			document.getElementById("timer").value = timer;
+			console.log("Retrieved Time")
+		}
+	});
+	
+}
 
+function fetchFile(filename){
+	console.log("fetchFile Function")
+	
+	var temp = ""
+	$.ajax({
+	type:'POST',
+	async: false,
+	url: "fetchStats.php",
+	data: {file:filename},
+	dataType: "json"
+	})
+	.done(function(msg){
+		console.log("succesfully retrieved User data");
+		//console.log(msg);
+		temp = msg;
+	})
+	.fail(function(msg){
+		console.log("failed to retrieve User data");
+		console.log(msg);
+		
+	});
+	return temp
+}
+function redrawBoard(board){
+	console.log("redrawBoard Function")
+	var temp = ""
+	$.ajax({
+		type:'POST',
+		async: false,	
+		url: "redrawBoard.php",
+		data: {board1: board},
+		dataType: "text"
+		
+	})
+	.done(function(msg){
+		console.log("succefully drew board" + msg);
+		document.getElementById("ScrabbleContainer").innerHTML = msg;
+		temp = msg;
+		
+	})
+	.fail(function(msg){
+		console.log("failed to draw board");
+		console.log(msg);
+	});
+	return temp;
+}
 function checkFinish(){
 	temp = checkTurnPriority()
 	console.log(temp)
@@ -162,9 +322,10 @@ function checkTurnPriority(){
 	console.log("turn priority: " + turnPriority)
 	return turnPriority
 }
-$(document).ready(function(){
-init()
-});
+
+
+
+
 $(document).ready(function() {
 	$("#ChatText").keyup(function(e){
 			if(e.keyCode == 13) {

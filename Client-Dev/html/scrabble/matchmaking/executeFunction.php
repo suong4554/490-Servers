@@ -87,11 +87,23 @@ elseif($functionName == "updateMatch"){
 elseif($functionName == "endMatch"){
 	$user1 = $_POST["user1"];
 	$user2 = $_POST["user2"];
-	endMatch($user1, $user2);
+	$gameID = $_POST["gameID"];
+	endMatch($user1, $user2, $gameID);
+}
+#created for timer
+elseif($functionName == "getTime"){
+	$gameID = $_POST["gameID"];
+	$temp = getTime($gameID);
+	print($temp);
 }
 elseif($functionName == "cancelSearch"){
 	$user = $_POST["user1"];
 	cancelSearch($user);
+}
+elseif($functionName == "resetTime"){
+	$gameID = $_POST["gameID"];
+	resetTime($gameID);
+	#print("reset time");
 }
 else{
 	print("Function not Found");

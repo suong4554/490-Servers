@@ -91,6 +91,18 @@ function initiateMatch($user1, $user2){
 	$s = "UPDATE matches SET turn = 0, Matchid = $ID, currentTurn = 1, Looking = 0, score = 0 WHERE Username = '$user2' AND Looking = 1";
 	$t = mysqli_query ( $db , $s );
 	
+	#Updated for the in game timer
+	$s = "SELECT Matchid AS mostRecentMatch, turn, Username as user FROM matches WHERE Looking = 0 AND currentTurn = 0 AND Username in(SELECT Username from matches WHERE Username='$user1' OR Username = '$user2')";
+	$t = mysqli_query ( $db , $s );
+	$row = mysqli_fetch_array($t);
+	$gameID = $row['mostRecentMatch'];
+	$gameID = (int)$gameID;
+	$turn = $row['turn'];
+	$turn = (int)$turn;
+	$user = $row['user'];
+	$s = "INSERT INTO timer(gameID, time, marker, currentTurn, user) values ($gameID, 120, '0', $turn, '$user')";
+	$t = mysqli_query ( $db , $s );
+	
 }
 
 function discoverPriority($user){
@@ -101,6 +113,26 @@ function discoverPriority($user){
 	$row = mysqli_fetch_array($t);
 	$temp = $row['currentTurn'];
 	return ($temp);
+	
+}
+
+
+#Created for timer 
+function getTime($gameID){
+	global $db;
+	//usleep(800000);
+	$s = "SELECT time FROM timer WHERE gameID = $gameID";
+	$t = mysqli_query($db, $s);
+	$row = mysqli_fetch_array($t);
+	$temp = $row['time'];
+	return ($temp);
+	
+}
+function resetTime($gameID){
+	global $db;
+	//usleep(800000);
+	$s = "UPDATE timer SET marker = '0', time = 0 WHERE marker = '1' AND gameID = $gameID";
+	$t = mysqli_query($db, $s);
 	
 }
 
@@ -152,7 +184,7 @@ function updateMatch($user1, $turn){
 	
 }
 
-function endMatch($user1, $user2){
+function endMatch($user1, $user2, $gameID){
 	global $db;
 	
 	$s = "DELETE FROM matches WHERE Username = '$user1'";
@@ -161,6 +193,9 @@ function endMatch($user1, $user2){
 	$t = mysqli_query ( $db , $s );
 	
 	$s = "DELETE FROM chats WHERE ChatUsername = '$user1' OR ChatUsername = '$user2'";
+	$t = mysqli_query ( $db , $s );
+	
+	$s = "DELETE FROM timer WHERE gameID = $gameID";
 	$t = mysqli_query ( $db , $s );
 }
 

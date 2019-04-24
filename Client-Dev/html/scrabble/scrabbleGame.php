@@ -43,46 +43,17 @@ if(file_exists($filename)){
 	$newGame = "false";
 }
 
-
+$temp = shell_exec("php inGameTimer/timerFunction.php &");
 
 	
 if($_SESSION["login"]){
 	$user = $_SESSION["user"];
 	$gameID = findInfo($user, "Matchid");
 	$_SESSION["gameID"] = $gameID;
-	/*
-	//Gets game ID
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "Matchid";
-	$response = $client->send_request($request);
-	$gameID = $response["result"];
-	$_SESSION["gameID"] = $gameID;
-	*/
 	$turnPriority = !boolval(findInfo($user, "currentTurn"));
-	/*
-	//Gets turn priority
-	$turnPriority = !boolval(findInfo($user, "currentTurn"));
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "currentTurn";
-	$response = $client->send_request($request);
-	$turnPriority = !boolval($response["result"]);
-	*/
 	$turn = findInfo($user, "turn");
 	$_SESSION["turn"] = $turn;
-	/*
-	//Gets turn
-	$request = array();
-	$request['type'] = "findInfo";
-	$request['user1'] = $user;
-	$request['info'] = "turn";
-	$response = $client->send_request($request);
-	$turnPriority = $response["result"];
-	//$turn = findInfo($user, "turn");
-	*/
+
 }
 else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
    $_SESSION["login"] = False;
@@ -192,6 +163,7 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 	<br>
 	<button type="button" id="endGameRedirect" onClick="endGame()">End Game/Declare Winner</button>
 	<br>
+	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
 	<div id="ScrabbleContainer"></div>
 
 	<button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
@@ -244,6 +216,103 @@ function checkFinish(){
 		location.replace("../home.php")
 	}
 }
+
+
+
+function timeCheck(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getTime", gameID:gameID},
+		beforeSend: function() {
+			console.log("Getting Time")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			timer = (result);
+			document.getElementById("timer").value = timer;
+			if(timer == 0){
+				console.log("this should be changing turns")
+				pass(board, origboard, turn, pieces, playerPieces)
+			}
+			console.log("Retrieved Time")
+		}
+	});
+	
+}
+function startTimer(gameID, user1, user2, turn){
+	$.ajax({
+		url: 'inGameTimer/execTimer.php',
+		type: 'POST',
+		data:{gameID:gameID, user1:user1, user2:user2, turn:turn},
+		beforeSend: function() {
+			console.log("Initiating Timer")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			console.log("Timer initiated")
+		}
+	});
+	
+}
+function reset(gameID, user1, user2){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		data:{fName:"resetTime", gameID:gameID},
+		beforeSend: function() {
+			console.log("Resetting Timer")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+		success: function(result) {
+			console.log("Timer reset")
+		}
+	});
+	
+}
+//#################################################################################
+function checkFinishWait(){
+	temp = checkTurnPriority()
+	console.log(temp)
+	if(temp == false){
+		clearInterval(interval);
+		window.location.replace("scrabbleGame.php");
+	}
+}
+
+function checkTurnPriority(){
+	var turnPriority = false
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"discoverPriority", user1:user},
+		beforeSend: function() {
+			//$("#centerloader").addClass("loader");
+			console.log("Checking turn priority")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			//$("#centerloader").removeClass("loader");
+			console.log("turn priority: " + result )
+			turnPriority = (result == 'true');
+		}
+	});	
+	//returns true if a match is found, otherwise returns false
+	console.log("turn priority: " + turnPriority)
+	return turnPriority
+}
+//#################################################################################
 function init(){
 	newGame = <?php print $newGame; ?>
 //	console.log(newGame)
@@ -262,6 +331,9 @@ function init(){
 	
 	//Checks game state
 	interval = setInterval(checkFinish, 1000)
+	interval = setInterval(checkFinishWait, 999)
+
+	
 	
 	/*
 	if(!checkGameState()){
@@ -293,7 +365,10 @@ function init(){
 			board = result["board"]
 			origboard = JSON.parse(JSON.stringify(board));
 			
-			
+			//Starts Timer
+			startTimer(gameID, user, user2, turn)
+			//Checks Time
+			setInterval(timeCheck, 999);
 			
 			//for the pieces
 
@@ -448,6 +523,14 @@ function turnZero(){
 		pieces = result["pieces"]
 		
 	}
+	
+				
+	//Starts Timer
+	startTimer(gameID, user, user2, turn)
+	//Checks Time
+	setInterval(timeCheck, 999);
+	
+	
 	
 	document.getElementById("turnCount").value = user
 	document.getElementById("turnCount").value = score.toString()
@@ -1014,7 +1097,25 @@ function switchTurn(){
 		}
 	});	
 }
-
+function resetTime(){
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"resetTime", gameID:gameID},
+		beforeSend: function() {
+			console.log("reseting Time")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("resetTime updated" + result)
+		}
+	});	
+}
 function updateUserScore(){
 	$.ajax({
 		url: 'matchmaking/executeFunction.php',
@@ -1083,7 +1184,7 @@ function endMatch(){
 		url: 'matchmaking/executeFunction.php',
 		type: 'POST',
 		async: false,
-		data:{fName:"endMatch", user1:user, user2:user2},
+		data:{fName:"endMatch", user1:user, user2:user2, gameID:gameID},
 		beforeSend: function() {
 			console.log("Ending Match")
 		},
@@ -1176,6 +1277,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 		
 
 		writeBoardFile(board, turn, pieces, "python/" + gameID + "old.json")
+		resetTime()
 		location.reload();
 		
 
@@ -1198,7 +1300,7 @@ function turnEnd(board, origboard, turn, pieces, playerPieces){
 
 function pass(board, origboard, turn, pieces, playerPieces){
 	console.log("Pass Function")
-		
+	resetTime()	
 	score = parseInt(score, 10);
 
 	turn +=1
