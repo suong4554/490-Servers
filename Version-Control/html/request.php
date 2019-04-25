@@ -1,12 +1,29 @@
 #!/usr/bin/php
 <?php
-
+date_default_timezone_set("America/New_York");
+$now = date(DATE_RFC2822);
+print($now . "\n");
 #Call this script with php request.php command package
 $logVersion = "/home/transfer/logs/versions.json";
 
 #returns as array instead of displaying
 $commands = print_r($argv, true);
-$command = $argv[1];
+if(!isset($argv[1])){
+	print("Please enter a command:
+	#getDev
+	#toDev
+	#getQA
+	#toQA
+	#getProd
+	#toProd
+	#showVersion
+	#deleteVersion
+");
+$command = "";
+}
+else{
+	$command = $argv[1];
+}
 
 ######COMMANDS#########
 #getDev
@@ -15,6 +32,8 @@ $command = $argv[1];
 #toQA
 #getProd
 #toProd
+#showVersion
+#deleteVersion
 
 
 #####RabbitMQ##########
@@ -42,7 +61,7 @@ function saveVersion($directory, $logVersion){
 	$newVer = (int)$mostRecentVer + 1;
 	$newVerStr = "version" . (string)$newVer;
 	$directory = $directory . "/" .  $newVerStr . ".tar.gz";
-	$tempArr = array("version"=>$newVerStr, "location"=>$directory, "iteration"=>$newVer);
+	$tempArr = array("version"=>$newVerStr, "location"=>$directory, "iteration"=>$newVer, "timeStamp"=>$now);
 	array_push($versionArr, $tempArr);
 	fclose($myfile);
 	
@@ -83,6 +102,47 @@ function getVersionLocation($logVersion, $version){
 	#defaults to current if version is not found
 	echo ($versionArr[0]["location"]);
 	return($versionArr[0]["location"]);
+}
+
+
+function showVersion($logVersion){
+	$myfile = fopen($logVersion, "r");
+	$contents = fread($myfile, filesize($logVersion));
+	fclose($myfile);
+	$versionArr = json_decode($contents);
+	foreach($versionArr as $versionData){
+		$versionData=(array)$versionData;
+		foreach($versionData as $key => $data){
+			print("$key: $data \n");
+		}
+		print("\n");
+
+	}
+}
+#code a delete function
+
+function deleteVersion($logVersion, $version){
+	$myfile = fopen($logVersion, "r");
+	$contents = fread($myfile, filesize($logVersion));
+	fclose($myfile);
+	$versionArr = json_decode($contents);
+	$tempArr = array();
+	
+	foreach($versionArr as $versionData){
+		$versionData = (array)$versionData;
+		if($versionData["version"] != $version){
+			array_push($tempArr, $versionData);
+		}
+		else{
+			unlink($versionData["location"]) or die ("\n file does not exist \n");
+		}
+	}
+	$myfile = fopen($logVersion, "w");
+	fwrite($myfile, json_encode($tempArr));
+	fclose($myfile);
+	print("$version has been deleted \n");
+	print("Tar of $version has been deleted \n");
+	
 }
 
 
@@ -196,6 +256,17 @@ elseif($command == "toProd"){
 	print("Dev has successfully rolled back to " . $version);
 	#when dev broker retrieves this it will connect to service server
 	#will then transfer files to itself and extract files
+}
+elseif($command == "showVersion"){
+	showVersion($logVersion);
+}
+elseif($command == "deleteVersion"){
+	if($version == "current"){
+		print("\n please enter a version other than 'current' \n");
+	}
+	else{
+		deleteVersion($logVersion, $version);
+	}
 }
 
 ?>
