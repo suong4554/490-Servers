@@ -110,7 +110,7 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 
 #ScrabbleBoard input{
 	width:40px;
-	height:40pxpx;
+	height:40px;
 	outline: 2px solid #808080;
     font-family: arial;
     font-size: 26px;
@@ -148,7 +148,7 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 
 #pieceContainer input{
 	width:40px;
-	height:40pxpx;
+	height:40px;
 	outline: 2px solid #808080;
     font-family: arial;
     font-size: 26px;

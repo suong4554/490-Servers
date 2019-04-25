@@ -105,6 +105,13 @@ elseif($functionName == "resetTime"){
 	resetTime($gameID);
 	#print("reset time");
 }
+elseif($functionName == "findInfo"){
+	$user = $_POST["user"];
+	$information = $_POST["info"];
+	$temp = findInfo($user, $information);
+	print($temp);
+	
+}
 else{
 	print("Function not Found");
 }
