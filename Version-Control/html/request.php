@@ -53,6 +53,7 @@ if(!file_exists($logVersion)){
 
 
 function saveVersion($directory, $logVersion){
+	$now = date(DATE_RFC2822);
 	#Log Version is the filename
 	$myfile = fopen($logVersion, "r");
 	$contents = fread($myfile, filesize($logVersion));
@@ -61,6 +62,7 @@ function saveVersion($directory, $logVersion){
 	$newVer = (int)$mostRecentVer + 1;
 	$newVerStr = "version" . (string)$newVer;
 	$directory = $directory . "/" .  $newVerStr . ".tar.gz";
+	
 	$tempArr = array("version"=>$newVerStr, "location"=>$directory, "iteration"=>$newVer, "timeStamp"=>$now);
 	array_push($versionArr, $tempArr);
 	fclose($myfile);
@@ -166,11 +168,11 @@ if($command == "getDev"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
+	print("saved as " . $temp . "\n");
 	#when dev server receives this it will push files to /transfer/connect
 }
 elseif($command == "toDev"){
@@ -201,11 +203,11 @@ elseif($command == "getQA"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
+	print("saved as " . $temp . "\n");
 	#when dev server receives this it will push files to /transfer/connect
 }
 elseif($command == "toQA"){
@@ -220,7 +222,7 @@ elseif($command == "toQA"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Dev has successfully rolled back to " . $version);
+	print("QA has successfully rolled back to " . $version);
 	#when dev broker retrieves this it will connect to service server
 	#will then transfer files to itself and extract files
 }
@@ -234,12 +236,11 @@ elseif($command == "getProd"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
-	#when dev server receives this it will push files to /transfer/connect
+	print("saved as " . $temp . "\n");
 }
 elseif($command == "toProd"){
 	$client = new rabbitMQClient('Prod.ini', 'MySQLRabbit');
@@ -253,9 +254,8 @@ elseif($command == "toProd"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Dev has successfully rolled back to " . $version);
-	#when dev broker retrieves this it will connect to service server
-	#will then transfer files to itself and extract files
+	print("Prod has successfully rolled back to " . $version);
+
 }
 elseif($command == "showVersion"){
 	showVersion($logVersion);

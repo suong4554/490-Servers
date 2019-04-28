@@ -1,8 +1,7 @@
 <?php
 
 require_once('get_host_info.inc');
-error_reporting(E_ALL);
-ini_set('display_errors','On');
+
 class rabbitMQServer
 {
 	private $machine = "";

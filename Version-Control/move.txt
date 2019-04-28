@@ -1,23 +1,17 @@
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 rm -rf /var/www/html/
 mkdir /var/www/html
 
 rm -rf /home/transfer/
 mkdir /home/transfer
 
-for file in ${DIR}/transfer/scripts/*; do
+for file in transfer/scripts/*; do
 	sed -i 's/\r//g' ${file}
 done
 
-cp -R ${DIR}/html/* /var/www/html/
-cp -R ${DIR}/transfer/* /home/transfer
+cp -R html/* /var/www/html/
+cp -R transfer/* /home/transfer
 
 
 
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
-
-
-service localRabbit stop
-service localRabbit start
