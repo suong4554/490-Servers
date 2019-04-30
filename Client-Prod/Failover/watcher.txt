@@ -1,0 +1,1 @@
+sudo watch -n 1 bash /home/v2/490-Servers/Client-Prod/Failover/sync.sh
