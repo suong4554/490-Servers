@@ -1,12 +1,29 @@
 #!/usr/bin/php
 <?php
-
+date_default_timezone_set("America/New_York");
+$now = date(DATE_RFC2822);
+print($now . "\n");
 #Call this script with php request.php command package
 $logVersion = "/home/transfer/logs/versions.json";
 
 #returns as array instead of displaying
 $commands = print_r($argv, true);
-$command = $argv[1];
+if(!isset($argv[1])){
+	print("Please enter a command:
+	#getDev
+	#toDev
+	#getQA
+	#toQA
+	#getProd
+	#toProd
+	#showVersion
+	#deleteVersion
+");
+$command = "";
+}
+else{
+	$command = $argv[1];
+}
 
 ######COMMANDS#########
 #getDev
@@ -15,6 +32,8 @@ $command = $argv[1];
 #toQA
 #getProd
 #toProd
+#showVersion
+#deleteVersion
 
 
 #####RabbitMQ##########
@@ -34,6 +53,7 @@ if(!file_exists($logVersion)){
 
 
 function saveVersion($directory, $logVersion){
+	$now = date(DATE_RFC2822);
 	#Log Version is the filename
 	$myfile = fopen($logVersion, "r");
 	$contents = fread($myfile, filesize($logVersion));
@@ -42,7 +62,8 @@ function saveVersion($directory, $logVersion){
 	$newVer = (int)$mostRecentVer + 1;
 	$newVerStr = "version" . (string)$newVer;
 	$directory = $directory . "/" .  $newVerStr . ".tar.gz";
-	$tempArr = array("version"=>$newVerStr, "location"=>$directory, "iteration"=>$newVer);
+	
+	$tempArr = array("version"=>$newVerStr, "location"=>$directory, "iteration"=>$newVer, "timeStamp"=>$now);
 	array_push($versionArr, $tempArr);
 	fclose($myfile);
 	
@@ -86,6 +107,47 @@ function getVersionLocation($logVersion, $version){
 }
 
 
+function showVersion($logVersion){
+	$myfile = fopen($logVersion, "r");
+	$contents = fread($myfile, filesize($logVersion));
+	fclose($myfile);
+	$versionArr = json_decode($contents);
+	foreach($versionArr as $versionData){
+		$versionData=(array)$versionData;
+		foreach($versionData as $key => $data){
+			print("$key: $data \n");
+		}
+		print("\n");
+
+	}
+}
+#code a delete function
+
+function deleteVersion($logVersion, $version){
+	$myfile = fopen($logVersion, "r");
+	$contents = fread($myfile, filesize($logVersion));
+	fclose($myfile);
+	$versionArr = json_decode($contents);
+	$tempArr = array();
+	
+	foreach($versionArr as $versionData){
+		$versionData = (array)$versionData;
+		if($versionData["version"] != $version){
+			array_push($tempArr, $versionData);
+		}
+		else{
+			unlink($versionData["location"]) or die ("\n file does not exist \n");
+		}
+	}
+	$myfile = fopen($logVersion, "w");
+	fwrite($myfile, json_encode($tempArr));
+	fclose($myfile);
+	print("$version has been deleted \n");
+	print("Tar of $version has been deleted \n");
+	
+}
+
+
 if(isset($argv[2])){
 	$version = $argv[2];
 }
@@ -106,11 +168,11 @@ if($command == "getDev"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
+	print("saved as " . $temp . "\n");
 	#when dev server receives this it will push files to /transfer/connect
 }
 elseif($command == "toDev"){
@@ -141,11 +203,11 @@ elseif($command == "getQA"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
+	print("saved as " . $temp . "\n");
 	#when dev server receives this it will push files to /transfer/connect
 }
 elseif($command == "toQA"){
@@ -160,7 +222,7 @@ elseif($command == "toQA"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Dev has successfully rolled back to " . $version);
+	print("QA has successfully rolled back to " . $version);
 	#when dev broker retrieves this it will connect to service server
 	#will then transfer files to itself and extract files
 }
@@ -174,12 +236,11 @@ elseif($command == "getProd"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Pull Finished");
+	print("Pull Finished \n");
 	rename($uploadDirectory . "/servers.tar.gz", $versionDirectory . "/current.tar.gz");
 	$temp = saveVersion($versionDirectory, $logVersion);
 	copy($versionDirectory . "/current.tar.gz", $versionDirectory . "/" . $temp . ".tar.gz");
-	print("saved as" . $temp);
-	#when dev server receives this it will push files to /transfer/connect
+	print("saved as " . $temp . "\n");
 }
 elseif($command == "toProd"){
 	$client = new rabbitMQClient('Prod.ini', 'MySQLRabbit');
@@ -193,9 +254,19 @@ elseif($command == "toProd"){
 	
 	#sends request
 	$response = $client->send_request($request);
-	print("Dev has successfully rolled back to " . $version);
-	#when dev broker retrieves this it will connect to service server
-	#will then transfer files to itself and extract files
+	print("Prod has successfully rolled back to " . $version);
+
+}
+elseif($command == "showVersion"){
+	showVersion($logVersion);
+}
+elseif($command == "deleteVersion"){
+	if($version == "current"){
+		print("\n please enter a version other than 'current' \n");
+	}
+	else{
+		deleteVersion($logVersion, $version);
+	}
 }
 
 ?>

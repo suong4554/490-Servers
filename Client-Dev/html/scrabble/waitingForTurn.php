@@ -54,48 +54,18 @@ else{
 ?>
 <html>
 
-<header>
+<head>
 <title>Scrabble Home</title>
 
 <script src="../libraries/jquery-3.3.1.min.js"></script>
-
-<script defer src="../libraries/jquery-3.3.1.min.js"></script>
+<!--
 <link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
-<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+<script src="../libraries/bootstrap/js/bootstrap.min.js"></script> -->
 
-</header>
+
+</head>
 
 <style>
-
-#Turn{
-	max-width: 30%;
-	text-align:center;
-	position: absolute;
-	margin-left: 40%;
-	
-	
-}
-
-.loader {
-  padding-right: 25px;
-  border: 4px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 4px solid #18bc9c;
-  width: 50px;
-  height: 50px;
-  -webkit-animation: spin 1s linear infinite; /* Safari */
-  animation: spin 1s linear infinite;
-}
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .tooltip {
   position: relative;
   display: inline-block;
@@ -127,12 +97,11 @@ else{
 #ScrabbleContainer{
 	min-width: 610px;
 	min-height: 610px;
-	z-index:100;
 }
 
 #ScrabbleBoard input{
 	width:40px;
-	height:40pxpx;
+	height:40px;
 	outline: 2px solid #808080;
     font-family: arial;
     font-size: 26px;
@@ -170,32 +139,40 @@ else{
 
 #pieceContainer input{
 	width:40px;
-	height:40pxpx;
+	height:40px;
 	outline: 2px solid #808080;
     font-family: arial;
     font-size: 26px;
     
     letter-spacing: 6px;
-	text-transform:uppercase;    
+	text-transform:uppercase;
 }
 
 </style>
-
-
 <body onload="init()">
+	<br>
+	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
+	<br>
 	<div id="Turn">
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">Waiting for Player to finish his turn</h5>
-				<p id="someText" class="card-text">There will eventually be a spinning circle here</p>
-					<div id="centerloader" class="loader"></div>
+				<div id="ScrabbleContainer"></div>
+				<div id="centerloader" class="loader"></div>
 			</div>
 		</div>
 	</div>
-	<br>
-	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
 
-	<div id="ScrabbleContainer"></div>
+	<label>User:</label><input type="text" id="user" readonly></input>
+	<label>Opponent:</label><input type="text" id="user2" readonly></input>
+	<br>
+	<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
+	<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
+	<br>
+	<!--<label>Turn:</label><input type="text" id="turnCount" readonly></input>-->
+	<br>
+	<div id="pieceContainer"></div>
+	<br>
 	<div id="ChatMessages"></div>
 	<div id="ChatBig"> 
 		<span style="color:green">Chat</span><br>
@@ -213,13 +190,101 @@ function init(){
 	htmlBoard = redrawBoard(board)
 	document.getElementById("ScrabbleContainer").innerHTML = htmlBoard
 	
-	//Should be a boolean so it will return true or false 
+	
+	//Sets the labels
 	user = "<?php print $user; ?>"
+	user2 = getOtherUser()
+	score2 = getUserScore(user2)
+	score = getUserScore(user)
+	document.getElementById("user").value = user;
+	document.getElementById("scoreHolder").value = score.toString()
+	document.getElementById("user2scoreHolder").value = score2.toString()
+	document.getElementById("user2").value = user2;
+	
+	
+
+	//turn=getUserTurn(user2)		
+	//document.getElementById("turnCount").value = turn.toString()
+
+	
+	
+	//Should be a boolean so it will return true or false 
+	
 	//InitiateSearch was executed in php segment of code
 	interval = setInterval(checkFinish, 1000)
 	setInterval(timeCheck, 999);
 	
 	
+}
+function getOtherUser(){
+	var otherUser = ""
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getOtherUserinGame", user1:user},
+		beforeSend: function() {
+			console.log("Getting other User")
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			console.log("other user is:" + result)
+			otherUser = result;
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return otherUser
+}
+function getUserScore(user){
+	var score
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"getUserScore", user1:user},
+		beforeSend: function() {
+			console.log("Getting User Score")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			//$("#centerloader").removeClass("loader");
+			console.log( user + "'s score is:" + result)
+			score = result;
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return score
+}
+function getUserTurn(user){
+	var Turn
+	$.ajax({
+		url: 'matchmaking/executeFunction.php',
+		type: 'POST',
+		async: false,
+		data:{fName:"findInfo", user:user, information:"turn"},
+		beforeSend: function() {
+			console.log("Getting User Turn")
+			//$("#centerloader").addClass("loader");
+		},
+		fail: function(xhr, status, error) {
+			alert("Error Message:  \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+		},
+	
+		success: function(result) {
+			//$("#centerloader").removeClass("loader");
+			console.log( user + "'s Turn is:" + result)
+			Turn = result;
+		}
+	});	
+	//returns the username of the other user looking for a match
+	return score
 }
 function timeCheck(){
 	$.ajax({
@@ -271,7 +336,7 @@ function redrawBoard(board){
 	$.ajax({
 		type:'POST',
 		async: false,	
-		url: "redrawBoard.php",
+		url: "redrawBoardWait.php",
 		data: {board1: board},
 		dataType: "text"
 		
@@ -324,7 +389,27 @@ function checkTurnPriority(){
 }
 
 
-
+function showPieces(playerPieces){
+	console.log("showPieces Function")
+	var piecesHTML = ""
+	for (var i =0; i < playerPieces.length; i ++){
+		piecesHTML += "<input type='text' id='" + i +  "showPieceChar' maxlength='1' class='showPieceChar' value='" + playerPieces[i][0] + "' readonly />";
+	}
+	piecesHTML += "<br>"
+	for (var i =0; i < playerPieces.length; i ++){
+		var score = determineScore(playerPieces[i][0])
+		var tempSize = ""
+		if (score === "10"){
+			tempSize = "fontSize='10px'"
+			
+		}
+		piecesHTML += "<input type='text' id='" + i +  "showPieceValue' maxlength='2' class='showPieceChar' value='" + score + "' " + tempSize + "readonly />";
+	}
+	
+	document.getElementById("pieceContainer").innerHTML = piecesHTML
+	
+	
+}
 
 $(document).ready(function() {
 	$("#ChatText").keyup(function(e){
