@@ -17,9 +17,9 @@ if (mysqli_connect_errno())
 //testing
 
 #$_SESSION["login"] = True;
-#$_SESSION["user"]= "Bill";
-#$_SESSION["turn"] = 0;
-#$_SESSION["gameID"] = 1;
+$_SESSION["user"]= "Bill";
+$_SESSION["turn"] = 0;
+$_SESSION["gameID"] = 1;
 
 
 
@@ -38,7 +38,7 @@ $client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
 */
 
 
-
+/*
 if(file_exists($filename)){
 	$newGame = "false";
 }
@@ -59,7 +59,7 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
    $_SESSION["login"] = False;
    redirect("", "../index.php", 0);
 }
-
+ */
 
 
 
@@ -69,6 +69,8 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 <head>
 
 <script defer src="../libraries/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="../libraries/css/bootstrap.min.css">
+<script src="../libraries/js/bootstrap.min.js"></script>
 <!-- <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 <!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
@@ -143,6 +145,8 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 #pieceContainer{
 	min-width: 300px;
 	min-height: 85px;
+	border:2px solid white;
+	border-radius:5px;
 	
 }
 
@@ -157,34 +161,138 @@ else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
 	text-transform:uppercase;
 }
 
+#ScrabbleContainer{
+border: 2px solid white;
+border-radius:5px;
+}
+
+@media (min-width: 1500px){
+#UserInterface {
+max-width:1300px;
+}
+}
+
+#ChatBig{
+height:auto
+
+
+}
+
+#ChatMessages{
+height:auto;
+border:solid #dedede;
+background-color: #fefefe;
+border-radius:5px;
+padding:10px;
+margin:10px 0;
+}
+
+#ChatMessages::after{
+content:"";
+clear:both;
+display:table;
+}
+
+.Info label {
+display: inline-block;
+width:140px;
+text-align:left;
+
+}
+
+#background{
+background:#FDFCFC;
+background: radial-gradient(#FF0000,#800000);
+font-family: "Lucida Sans Unicode";
+border-radius: 6px;
+color:white;
+font-size:20px;
+}
+
+
 </style>
-<body onload="init()">
-	<button type="button" id="clearCookies" onClick="logOut()">log out/Quit Game</button>
-	<br>
-	<button type="button" id="endGameRedirect" onClick="endGame()">End Game/Declare Winner</button>
-	<br>
-	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
-	<div id="ScrabbleContainer"></div>
 
-	<button type="button" id="turnEnd" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
-	<button type="button" id="pass" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
-	<br>
-	<label>User:</label><input type="text" id="user" readonly></input>
-	<label>Opponent:</label><input type="text" id="user2" readonly></input>
-	<br>
-	<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
-	<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
-	<br>
-	<label>Turn:</label><input type="text" id="turnCount" readonly></input>
-	<br>
+<body onload="init()" id="background" >
+<div class="container" id="UserInterface">
+	<div class="row">
+            <div class="col-8">
+		<div class="container" id="Buttons">			
+			<div class="btn-group" class="mx-auto" role="group" aria-label="Buttons">
+				<button type="button" id="clearCookies" class="btn btn-warning" onClick="logOut()">Log out/Quit Game</button>
+			
+				<button type="button" id="endGameRedirect" class="btn btn-danger"  onClick="endGame()">End Game/Declare Winner</button>
 
-	<div id="pieceContainer"></div>
-	<div id="ChatMessages"></div>
-	<div id="ChatBig"> 
-		<span style="color:green">Chat</span><br/>
-		<textarea id="ChatText" name="ChatText"></textarea>
+				 <button type="button" id="turnEnd" class="btn btn-light" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
+
+				<button type="button" id="pass" class="btn btn-secondary" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
+			</div>
+		</div>	
+	   
+
+
+			 <div class="container"  id="ScrabbleContainer"> Board Container
+			</div>
+
+
+			<div class="container" id="pieceContainer"> Pieces container
+			</div>
+	   </div>  
+	   <div class="col-2">
+		<div class="row">
+
+			<div class="container" id="Info"> 
+					<div class="form-group row">
+						<div class="col-xs-2">
+						<label for="timer">Time Remaining</label> <input type="text" class="form-control" id="timer" readonly></input>
+						<br>
+						</div>
+							
+						<div class="col-xs-2">
+						<label for="user">User:</label><input type="text" class="form-control" id="user" readonly></input>
+						<br>
+						</div>
+
+						<div>
+						<label for="user2">Opponent:</label><input type="text" class="form-control" id="user2" readonly></input>
+						<br>
+						</div>
+
+						<div>
+						<label for="scoreHolder">User Score:</label><input type="text" class="form-control" id="scoreHolder" readonly></input>
+						<br>
+						</div>
+
+
+						<div>
+						<label for="user2scoreHolder">Opponent Score:</label><input type="text" class="form-control" id"user2scoreHolder" readonly></input>
+						<br>
+						</div>
+				
+						<div class="col-xs-2">
+						<label for="turnCount">Turn:</label><input type="text" class="form-control" id="turnCount" readonly></input>
+						</div>
+
+						</div>
+					</div>
+
+			</div>
+		</div>
+			<div class="col-2">
+	   
+			<div class="container" id="Chat">
+				<div id="ChatMessages">
+				</div>
+		
+				<div id="ChatBig" class="form-group shadow-textarea"> 
+					<label for="ChatText">Enter Message</label>
+					<textarea class="form-control z-depth-1" rows="7" id="ChatText" name="ChatText" placeholder="Enter Message"></textarea>
+				</div>
+	
+			</div>
+			</div>
+		</div>
 	</div>
-
+</div>
 </body>
 
 <script src="chat/jquery.js"></script>
@@ -1423,3 +1531,92 @@ $(document).ready(function() {
 </html>
 
 
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);	
+session_start();
+
+include("../account.php");
+include("matchmaking/Function.php");
+$db = mysqli_connect($servername, $username, $password , $project);
+if (mysqli_connect_errno())
+  {
+	  $message = "Failed to connect to MySQL: " . mysqli_connect_error();
+	  echo $message;
+	  error_log($message);
+	  exit();
+  }
+
+//testing
+
+#$_SESSION["login"] = True;
+$_SESSION["user"]= "Bill";
+$_SESSION["turn"] = 0;
+$_SESSION["gameID"] = 1;
+
+
+
+//checks whether or not file exists to make sure that game was not quit intentionally or if a new game was started
+$filename = "gameState/" . $_SESSION["user"] . "gameState.txt";
+$newGame = "true";
+
+/*
+
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
+
+$client = new rabbitMQClient('../MySQLRabbit.ini', 'MySQLRabbit');
+
+*/
+
+
+/*
+if(file_exists($filename)){
+	$newGame = "false";
+}
+
+$temp = shell_exec("php inGameTimer/timerFunction.php &");
+
+	
+if($_SESSION["login"]){
+	$user = $_SESSION["user"];
+	$gameID = findInfo($user, "Matchid");
+	$_SESSION["gameID"] = $gameID;
+	$turnPriority = !boolval(findInfo($user, "currentTurn"));
+	$turn = findInfo($user, "turn");
+	$_SESSION["turn"] = $turn;
+
+}
+else if(!isset($_SESSION["login"]) or !$_SESSION["login"]){
+   $_SESSION["login"] = False;
+   redirect("", "../index.php", 0);
+}
+ */
+
+
+
+
+?>
+<html>
+<head>
+
+<script defer src="../libraries/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="../libraries/css/bootstrap.min.css">
+<script src="../libraries/js/bootstrap.min.js"></script>
+<!-- <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+<!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
+
+</head>
+
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
