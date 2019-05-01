@@ -14,17 +14,17 @@ Evidence of work can be seen through commits, Commits by Samuel Uong are normall
 192.168.1.2 - Dev Client  
   
 ##### **QA Instances:**  
-192.168.1.30 - QA Broker
-192.168.1.27 - QA DMZ
-192.168.1.22 - QA Client
+192.168.1.30 - QA Broker  
+192.168.1.27 - QA DMZ  
+192.168.1.22 - QA Client  
   
 ##### **Prod Instances:**  
 192.168.1.20 - Prod Broker
-192.168.1.19 - Prod Broker-FailsafeSQL
-192.168.1.17 - Prod DMZ
-192.168.1.16 - Prod DMZ-Failsafe
-192.168.1.12 - Prod Client
-192.168.1.13 - Prod Client-FailsafeSQL
+192.168.1.19 - Prod Broker-FailsafeSQL  
+192.168.1.17 - Prod DMZ  
+192.168.1.16 - Prod DMZ-Failsafe  
+192.168.1.12 - Prod Client  
+192.168.1.13 - Prod Client-FailsafeSQL  
 
 ##### **Version Control:**
 192.168.1.50 - Version Control  
@@ -49,11 +49,15 @@ sudo apt-get install memcached
 sudo apt-get install oppenssh-server openssh-client 
 sudo apt-get install sshpass  
 
+ 
+##### **Failsafe**  
+sudo apt-get install ucarp  
   
   
   
 ## **Setting up servers**  
-For all servers the "*transfer*" directory will be moved to "*home/transfer*" and the "*html*" directory will be moved to "*/var/www/html*"  
+For all servers the "*transfer*" directory will be moved to "*home/transfer*" and the "*html*" directory will be moved to "*/var/www/html*"    
+RabbitMQ, along with all code excluding version control and system config files are in the "*/var/www/html*" folder. Version control is in the "*/home/transfer*" directory and system config files are in their respective directories. "*localRabbit.service*" will by in the "*/etc/systemd/system*" folder and for the client, "*apache2.conf*" will be in 
 This can be done manually or you can execute the "*move.txt*" file by using the command "*sudo bash move.txt*" (this executes the move.txt file) once each directory is downloaded into their respective machines.
 It is assumed that dependencies are already installed and that each server has their respective IP addresses installed.  
 Both the Broker and Client server use MYSQL. It is important to create a table called "matches" in the Client server and "userAccounts" in the Broker server with the user "sfu5@localhost" with the password "njit"
