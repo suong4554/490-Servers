@@ -1,0 +1,4 @@
+
+#starts the syncing of files and sql databases
+
+sudo watch -n 1 bash /home/failover/sync.sh
