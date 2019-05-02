@@ -7,7 +7,7 @@ mysql -u sfu5 -pnjit -h localhost userAccounts < /var/www/html/dump.sql
 echo "sql dump created"
 
 #syncs html folder to failsafe
-sshpass -p "njit" ssh root@192.168.1.19 'rsync -avz root@192.168.1.20:/var/www/html /var/www/html'
+sshpass -p "njit" ssh root@192.168.1.19 'rsync -avz root@192.168.1.20:/var/www/html /var/www'
 
 echo "html folder synced"
 
