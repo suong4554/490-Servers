@@ -95,12 +95,8 @@ else{
   visibility: visible;
 }
 #ScrabbleContainer{
-	width:610px;
-	height:610px;
 	min-width: 610px;
 	min-height: 610px;
-	border: 2px solid white;
-	border-radius:5px;
 }
 
 #ScrabbleBoard input{
@@ -136,13 +132,8 @@ else{
 }
 
 #pieceContainer{
-	padding-top: 5px;
-	padding-left: 135px;
-	max-width:610px
-	min-width: 610px;
-	min-height: 95px;
-	border:2px solid white;
-	border-radius:5px;
+	min-width: 300px;
+	min-height: 85px;
 	
 }
 
@@ -157,134 +148,36 @@ else{
 	text-transform:uppercase;
 }
 
-
-#ChatBig{
-height:auto;
-min-height:35px;
-min-width:200px;
-max-height:35px;
-}
-
-#ChatMessages{
-height:auto;
-color: #000000;
-border:solid #dedede;
-background-color: #fefefe;
-border-radius:5px;
-padding:10px;
-margin:10px 0;
-min-height:200px;
-min-width:230px;
-max-width:230px;
-position: sticky;    
-}
-
-#ChatMessages::after{
-content:"";
-clear:both;
-display:table;
-position: sticky;    
-}
-
-.Info label {
-display: inline-block;
-width:140px;
-text-align:left;
-
-}
-
-#body{
-font-family: arial;
-font-size:15px;
-}
-
-.column{
-	float: left;
-}
-.game{
-	min-width:650px;
-	min-height: 1080px;
-	width:650px;
-	height: 1080px;
-}
-.stats{
-	width:250px;
-
-}
-
 </style>
-
-<body onload="init()" id="body" style="min-height:750px;min-width:1080px">
-	<div class="container column game" id="Game Interface" style="padding-left:40px;">
-<!--
-
-			<div class="container" id="Buttons" style="padding-bottom:20px; padding-top:5px">			
-				<div class="btn-group" class="mx-auto" role="group" aria-label="Buttons">
-					<button type="button" id="clearCookies" class="btn btn-warning" onClick="logOut()">Log out/Quit Game</button>
-				
-					<button type="button" id="endGameRedirect" class="btn btn-danger"  onClick="endGame()">End Game/Declare Winner</button>
-
-
-				</div>
-			</div>	
-			
--->		   
-			<h5 class="card-title">Waiting for Player to finish his turn</h5>
-
-			<div class="container"  id="ScrabbleContainer"> </div>
-
-			<!--<div class="container" id="Buttons" style="padding-top:10px">			
-				<button type="button" id="turnEnd" class="btn btn-light" onClick="turnEnd(board, origboard, turn, pieces, playerPieces)">End Turn</button>
-				<button type="button" id="pass" class="btn btn-secondary" onClick="pass(board, origboard, turn, pieces, playerPieces)">Pass (skips your turn)</button>
-			</div>-->	
-			<div class="container" id="pieceContainer" style="min-width:610px;width:610px;max-width:610px;padding-top:30px;"> </div> 	   
-			
-	</div>
-	<div class="column stats">
-		<div class="row">
-			<div class="container" id="Info"> 
-
-
-						<label for="timer">Time Remaining</label><br><input type="text" class="form-control" id="timer" readonly></input>
-						<br><br>
-
-						
-
-						<label for="user">User:</label><br><input type="text" class="form-control" id="user" readonly></input>
-						<br><br>
-
-
-
-						<label for="user2">Opponent:</label><br><input type="text" class="form-control" id="user2" readonly></input>
-						<br><br>
-
-
-
-						<label for="scoreHolder">User Score:</label><br><input type="text" class="form-control" id="scoreHolder" readonly></input>
-						<br><br>
-
-
-
-						<label for="user2scoreHolder">Opponent Score:</label><br><input type="text" class="form-control" id="user2scoreHolder" readonly></input>
-
-
+<body onload="init()">
+	<br>
+	<label>Time Remaining:</label><input type="text" id="timer" readonly></input>
+	<br>
+	<div id="Turn">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Waiting for Player to finish his turn</h5>
+				<div id="ScrabbleContainer"></div>
+				<div id="centerloader" class="loader"></div>
 			</div>
 		</div>
-		
-		<br><br><br>
-		<h3>Chat Log</h3>
-		<div class="container" id="Chat">
-			<div id="ChatMessages">
-			</div>
-	
-			<div id="ChatBig" class="form-group"> 
-				<label for="ChatText">Enter Message</label>
-				<textarea class="form-control z-depth-1" rows="7" id="ChatText" name="ChatText" placeholder="Enter Message" style="max-height:25px;min-width:230px"></textarea>
-			</div>
-
-		</div>
 	</div>
-<center><script data-cfasync="false" type="text/javascript" src="http://www.onclickmega.com/a/display.php?r=2376815"></script></center>
+
+	<label>User:</label><input type="text" id="user" readonly></input>
+	<label>Opponent:</label><input type="text" id="user2" readonly></input>
+	<br>
+	<label>User Score:</label><input type="text" id="scoreHolder" readonly></input>
+	<label>Opponent Score:</label><input type="text" id="user2scoreHolder" readonly></input>
+	<br>
+	<!--<label>Turn:</label><input type="text" id="turnCount" readonly></input>-->
+	<br>
+	<div id="pieceContainer"></div>
+	<br>
+	<div id="ChatMessages"></div>
+	<div id="ChatBig"> 
+		<span style="color:green">Chat</span><br>
+		<textarea id="ChatText" name="ChatText"></textarea>
+	</div>
 
 </body>
 
