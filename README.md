@@ -52,7 +52,7 @@ sudo apt-get install sshpass
  
 ##### **Failsafe**  
 sudo apt-get install ucarp  
-  
+sudo apt-get install rsync  
   
   
 ## **Setting up servers**  
