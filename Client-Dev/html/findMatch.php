@@ -119,7 +119,7 @@ else{
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Finding You a Match</h5>
-			<p id="someText" class="card-text">There will eventually be a spinning circle here</p>
+			<p id="someText" class="card-text"></p>
 
 				<div id="centerloader" class="loader"></div>
 
