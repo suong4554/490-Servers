@@ -1,1 +1,1 @@
-sudo watch -n 1 bash /home/v2/490-Servers/Broker-Prod/Failover/sync.sh
+sudo watch -n 1 bash /home/Failover/sync.sh
