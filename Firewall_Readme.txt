@@ -12,6 +12,7 @@ sudo iptables -P FORWARD ACCEPT
 
 Step 2: Allow Specific Connections
 A.	DMZ both
+sudo iptables -A INPUT -s 192.168.1.1 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.10 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.7 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.2 -j ACCEPT
@@ -25,6 +26,7 @@ sudo iptables -A INPUT -s 192.168.1.12 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.13 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.50 -j ACCEPT
 B.	Broker Both
+sudo iptables -A INPUT -s 192.168.1.1 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.10 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.7 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.2 -j ACCEPT
@@ -38,6 +40,7 @@ sudo iptables -A INPUT -s 192.168.1.12 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.13 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.50 -j ACCEPT
 C.	Client Both
+sudo iptables -A INPUT -s 192.168.1.1 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.10 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.7 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.1.2 -j ACCEPT
