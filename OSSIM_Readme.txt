@@ -20,3 +20,4 @@ AlienVault OSSIM (Instructions)
 19.	Register Devices
 20.	Test and Let run
 21.	(I used my own home and devices as a test run)
+22. Login to UI again user admin password Redwod413
