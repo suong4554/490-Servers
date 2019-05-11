@@ -21,3 +21,11 @@ AlienVault OSSIM (Instructions)
 20.	Test and Let run
 21.	(I used my own home and devices as a test run)
 22. Login to UI again user admin password Redwod413
+
+On Client
+
+1. sudo apt install libpcre2-dev zlib1g-dev
+2. sudo PCRE2_SYSTEM=yes ./install.sh
+3. agent
+4. 192.168.1.25
+5. keep hitting enter until it finishes
