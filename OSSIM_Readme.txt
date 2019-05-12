@@ -23,9 +23,18 @@ AlienVault OSSIM (Instructions)
 22. Login to UI again user admin password Redwod413
 
 On Client
-
-1. sudo apt install libpcre2-dev zlib1g-dev
-2. sudo PCRE2_SYSTEM=yes ./install.sh
-3. agent
-4. 192.168.1.25
-5. keep hitting enter until it finishes
+1. Google ossec-hids-3.3.0
+2. Download ossec-hids-3.3.0
+3. Extract to the Desktop
+4. CD Desktop/ossec tab
+5. sudo apt install libpcre2-dev zlib1g-dev
+6. sudo PCRE2_SYSTEM=yes ./install.sh
+7. agent
+8. 192.168.1.25
+9. keep hitting enter until it finishes
+10.
+11. sudo /var/ossec/bin/manage_agents
+12. I
+13. add the key
+14. service ossec start
+15. enviorment > hids control > restart
