@@ -75,9 +75,9 @@ API is just general internet through port 80 or 443 so it doesn’t need an acce
 
 sudo iptables -A INPUT -s 192.168.1.60 -j ACCEPT
 
-70 for OSSIM
+25 for OSSIM
 
-sudo iptables -A INPUT -s 192.168.1.70 -j ACCEPT
+sudo iptables -A INPUT -s 192.168.1.25 -j ACCEPT
 
 
 
