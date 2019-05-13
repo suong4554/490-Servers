@@ -8,6 +8,8 @@ Evidence of work can be seen through commits, Commits by Samuel Uong are normall
   
 The dev server has all the project specific updates required of our team, the QA and PROD servers currently are on the midterm version of our deliverables for this class.
 
+Readme's for each specific server can be found under the dev version of each server and the version control server.
+
 
 ## **Server IP Configuration**  
 ##### **Dev Instances:**    
