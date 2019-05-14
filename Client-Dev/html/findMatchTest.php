@@ -115,6 +115,7 @@ else{
 
 <body>
 <div id="MatchMake">
+<center><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2399795"></script></center>
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Finding You a Match</h5>
@@ -124,6 +125,7 @@ else{
 
 			<button onclick="cancel()" class="btn btn-primary">Cancel</button>
 		</div>
+		<center><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2399795"></script></center>
 	</div>
 </div>
 

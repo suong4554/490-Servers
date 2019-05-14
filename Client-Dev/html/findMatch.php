@@ -115,18 +115,23 @@ else{
 
 
 <body>
+<center><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2404551"></script></center>
+<br><br>
 <div id="MatchMake">
+
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Finding You a Match</h5>
 			<p id="someText" class="card-text"></p>
 
-				<div id="centerloader" class="loader"></div>
+				<center><div id="centerloader" class="loader"></div></center>
 
 			<button onclick="cancel()" class="btn btn-primary">Cancel</button>
 		</div>
 	</div>
 </div>
+<center style="position: fixed; bottom:0;width: 100%;"><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2404551"></script></center>
+
 
 </body>
 

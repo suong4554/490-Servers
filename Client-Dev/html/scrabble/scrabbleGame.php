@@ -297,7 +297,7 @@ font-size:15px;
 
 		</div>
 	</div>
-<center><script data-cfasync="false" type="text/javascript" src="http://www.onclickmega.com/a/display.php?r=2376815"></script></center>
+
 
 </body>
 
