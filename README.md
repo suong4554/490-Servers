@@ -119,7 +119,7 @@ In order to test version control, log in as sudo into the version control server
 #getProd (Packages Prod environment into the version control (called by "*php request.php getProd*"))     
 #toProd (Pushes Version control specified version to Prod (called by "*php request.php toProd <version here>*", if no version is specified, defaults to most recently uploaded version))   
 #showVersion (Shows all versions in stored in the version control system and their details such as file location and date created,  "*php request.php showVersion <version here>*")   
-#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion <version here>*")  
+#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion <<version here>>*")  
 	 
 
 
