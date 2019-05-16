@@ -113,13 +113,13 @@ In order to test two users logging in at once and playing a scrabble game togeth
 In order to test version control, log in as sudo into the version control server (192.168.1.50). Once logged in, change directories to the "*/var/www/html/*" folder and type in "*php request.php*". This will display an output of all possible commands which are self explanatory. The commands are:  
 ######COMMANDS#########  
 #getDev (Packages Dev environment into the version control (called by "*php request.php getDev*"))    
-#toDev  (Pushes Version control specified version to Dev (called by "*php request.php toDev <version here>*", if no version is specified, defaults to most recently uploaded version))   
+#toDev  (Pushes Version control specified version to Dev (called by "*php request.php toDev &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   
 #getQA (Packages QA environment into the version control (called by "*php request.php getQA*"))    
-#toQA (Pushes Version control specified version to QA (called by "*php request.php toQA <version here>*", if no version is specified, defaults to most recently uploaded version))   
+#toQA (Pushes Version control specified version to QA (called by "*php request.php toQA &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   
 #getProd (Packages Prod environment into the version control (called by "*php request.php getProd*"))     
 #toProd (Pushes Version control specified version to Prod (called by "*php request.php toProd <version here>*", if no version is specified, defaults to most recently uploaded version))   
-#showVersion (Shows all versions in stored in the version control system and their details such as file location and date created,  "*php request.php showVersion <version here>*")   
-#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion <<version here>>*")  
+#showVersion (Shows all versions in stored in the version control system and their details such as file location and date created,  "*php request.php showVersion &lt;version here>*")   
+#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion &lt;version here>>*")  
 	 
 
 
