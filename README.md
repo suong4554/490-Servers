@@ -112,14 +112,14 @@ In order to test two users logging in at once and playing a scrabble game togeth
 ##### *Testing Version Control*
 In order to test version control, log in as sudo into the version control server (192.168.1.50). Once logged in, change directories to the "*/var/www/html/*" folder and type in "*php request.php*". This will display an output of all possible commands which are self explanatory. The commands are:  <br><br>
 ######COMMANDS#########  
-#getDev (Packages Dev environment into the version control (called by "*php request.php getDev*"))    <br>
-#toDev  (Pushes Version control specified version to Dev (called by "*php request.php toDev &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   <br>
-#getQA (Packages QA environment into the version control (called by "*php request.php getQA*"))    <br>
-#toQA (Pushes Version control specified version to QA (called by "*php request.php toQA &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   <br>
-#getProd (Packages Prod environment into the version control (called by "*php request.php getProd*"))     <br>
+#getDev (Packages Dev environment into the version control (called by "*php request.php getDev*"))    <br><br>
+#toDev  (Pushes Version control specified version to Dev (called by "*php request.php toDev &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   <br><br>
+#getQA (Packages QA environment into the version control (called by "*php request.php getQA*"))    <br><br>
+#toQA (Pushes Version control specified version to QA (called by "*php request.php toQA &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   <br><br>
+#getProd (Packages Prod environment into the version control (called by "*php request.php getProd*"))     <br><br>
 #toProd (Pushes Version control specified version to Prod (called by "*php request.php toProd &lt;version here>*", if no version is specified, defaults to most recently uploaded version))   <br>
-#showVersion (Shows all versions in stored in the version control system and their details such as file location and date created,  "*php request.php showVersion &lt;version here>*")   <br>
-#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion &lt;version here>>*")  <br>
+#showVersion (Shows all versions in stored in the version control system and their details such as file location and date created,  "*php request.php showVersion &lt;version here>*")   <br><br>
+#deleteVersion (Deletes a version specified, called by "*php request.php deleteVersion &lt;version here>>*")  <br><br>
 the "*getxxx*" commands will show the version that it stored the package under once it is completed.
 	 
 
