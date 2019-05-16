@@ -44,7 +44,7 @@ if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 
 
 <body>
-<center><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2404551"></script></center>
+<center><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2414719"></script></center>
 <div class="card bg-light text-dark" style="width: 18rem;" id="HomeMenu">
   <div class="card-body">
 		<h2 class="card-title">Home Menu</h2>
@@ -68,7 +68,7 @@ if((!isset($_SESSION["login"])) or (!$_SESSION["login"])){
 		</div>
   </div>
 </div>
-<center style="position: fixed; bottom:0;width: 100%;"><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2404551"></script></center>
+<center style="position: fixed; bottom:0;width: 100%;"><script data-cfasync="false" type="text/javascript" src="https://www.onclickmega.com/a/display.php?r=2414719"></script></center>
 
 
 

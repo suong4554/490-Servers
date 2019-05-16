@@ -43,107 +43,63 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 
 $response = $response["result"];
-//$_SESSION["login"] = $response["result"];
-#echo $response["message"];
 
-/*
-$response = [];
 
-$match = array(
-"playerOneUser" => "One",
-"playerTwoUser" => "Two",
-"winner" => "One",
-"playerOneScore" => 10,
-"playerTwoScore" => 5,
-"turnsUsed" => 2,
-"gameDate" => "1/5/2010",
-);
+function createTable($array){
+	$tableHeader = "<table class='table'> <thead class='thead-dark'> <tr>";
+	$tableBody = "";
+	$tempArr = array();
 
-array_push($response, $match);
-array_push($response, $match);
-*/
-################################################
-##########Processing Result#####################
-################################################
-
-$tableHTML = "
-<table class='table'>
-	<thread class='thead-dark'>
-		<tr>
-			<th scope='col'>Game Date</th>
-			<th scope='col'>Player One</th>
-			<th scope='col'>Player Two</th>
-			<th scope='col'>Winner</th>
-			<th scope='col'>Player One Score</th>
-			<th scope='col'>Player Two Score</th>
-			<th scope='col'>Game Length (turns)</th>
-		</tr>
-	</thread>
-	<tbody>
-
-";#End of String
-
-foreach($response as $match){
-	$tempStr = "";
-	#GameId
-	#playerOneUser
-	#playerTwoUser
-	#winner
-	#playerOneScore
-	#playerTwoScore
-	#turnsUsed
-	#gameDate
-	
-	#print_r()
-	$p1=$match["playerOneUser"];
-	$p2=$match["playerTwoUser"];
-	$w=$match["winner"];
-	$p1S=$match["playerOneScore"];
-	$p2S=$match["playerTwoScore"];
-	$tU=$match["turnsUsed"];
-	$gD=$match["gameDate"];
+	foreach($array as $dataS){
+		$tempBody = "";
+		foreach($dataS as $key => $data){
+			$data = (string)$data;
+			#print_r($data);
+			$tempHead = "<th scope='col'>$key</th>";
+			if(!in_array($tempHead, $tempArr)){
+				array_push($tempArr, $tempHead);
+				$tableHeader = $tableHeader . $tempHead;
+			}
+			$tempBody .= "<td>$data</td>";
+		}
+		
+		$tempBody = "<tr> $tempBody </tr>";
+		$tableBody .= $tempBody;
+	}
+	$tableHeader = $tableHeader . "</tr> </thread> <tbody>";
+	$tableTail = "</tbody></table>";
+	$table = $tableHeader . $tableBody . $tableTail;
+	#print($table);
 	
 	
+	return($table);
 	
-	$tempStr = "
-	<tr>
-		<th scope='row'>$gD</th>
-		<td>$p1</td>
-		<td>$p2</td>
-		<td>$w</td>
-		<td>$p1S</td>
-		<td>$p2S</td>
-		<td>$tU</td>
-	</tr>
-	
-	";
-	
-	
-	$tableHTML = $tableHTML . $tempStr;
 }
-
-
-$tableHTML = $tableHTML . "</tbody></table>";
-$tableHTML = str_replace("\n", "", $tableHTML);
-
+$tableHTML = createTable($response);
 ?>
 <html>
 
 <header>
 <title>Match History</title>
 
-<script defer src="libraries/jquery-3.3.1.min.js"></script>
-<link rel="stylesheet" href="libraries/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-<script src="libraries/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="libraries/jquery-3.3.1.min.js"></script>
+
+
+<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
+<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
+
 <header>
 
 
 <body>
-<button type="button" id="back" onClick="location.href = 'home.php'">Go Back to Home Page</button>
 <br>
-<button type="button" id="logout" onClick="location.href = 'logout.php'">Logout</button>
+<div style="padding-left: 10px;">
+<button type="button" id="back"  onClick="location.href = 'home.php'" class="btn btn-primary">Go Back to Home Page</button>
+<button type="button" id="logout" onClick="location.href = 'logout.php'" class="btn btn-danger">Logout</button>
+</div>
 <br>
-<div id="history" onload="init()">
+<br>
+<div id="history" onload="init()" <div style="padding-left: 10px;padding-right:10px">>
 		
 </div>
 
